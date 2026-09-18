@@ -1,0 +1,23 @@
+{
+  "scope": "anatomy-teaching project only",
+  "removed": [
+    "3D互動教學版",
+    "3D知識整合教學版",
+    "人體解剖3D_互動教學包_20260914.zip",
+    "app/Anatomy.tsx",
+    "app/Anatomy2D.tsx",
+    "app/guide",
+    "public/assets",
+    "public/models/full-atlas.glb",
+    "build-offline.mjs",
+    "build-offline-3d.mjs",
+    "offline-entry.tsx",
+    "verify-offline.mjs",
+    "scripts/extract-lymph.py",
+    "validation/test-3d.cjs",
+    "validation/test-offline.cjs",
+    "validation/test-knowledge.cjs",
+    "validation/result-20260914.json",
+    ".DS_Store"
+  ]
+}

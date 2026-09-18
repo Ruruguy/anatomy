@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url);
+const {build}=createRequire(require.resolve('vite/package.json'))('esbuild');
+const root=path.resolve(import.meta.dirname,'..');process.chdir(root);
+const out='docs';for(const dir of ['assets','models','draco'])fs.mkdirSync(path.join(out,dir),{recursive:true});
+await build({entryPoints:['offline-3d-entry.tsx'],bundle:true,outfile:'docs/assets/app.js',minify:true,jsx:'automatic',format:'iife',legalComments:'eof',define:{'process.env.NODE_ENV':'"production"'},alias:{'@':root},tsconfig:'tsconfig.json'});
+const cssdir='dist/client/_next/static/css';
+fs.writeFileSync('docs/assets/style.css',fs.readdirSync(cssdir).filter(n=>n.endsWith('.css')).map(n=>fs.readFileSync(path.join(cssdir,n),'utf8')).join('\n'));
+for(const name of ['arm-core.glb','arm-upper-limb-right.glb','arm-structures.json','skeleton.glb','muscular.glb','cardiovascular.glb','nervous.glb','visceral.glb','lymphatic.glb'])fs.copyFileSync('public/models/'+name,'docs/models/'+name);
+fs.copyFileSync('public/draco/draco_decoder.js','docs/draco/draco_decoder.js');
+fs.writeFileSync('docs/index.html',`<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="3D 人體解剖模型與 11 大系統知識、構造說明、教學提示及課堂問答。"><title>人體解剖教室｜3D 模型與系統知識</title><link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./assets/style.css"></head><body><div id="root"></div><noscript>請啟用 JavaScript 以使用 3D 互動教材。</noscript><script src="./assets/app.js" defer></script></body></html>`);
+fs.writeFileSync('docs/favicon.svg',`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="#0a1119"/><path d="M16 7v18M7 16h18" stroke="#93dfcd" stroke-width="4" stroke-linecap="round"/></svg>`);
+fs.writeFileSync('docs/.nojekyll','');
+for(const name of ['ATTRIBUTION.md','THIRD_PARTY_LICENSES.txt'])if(fs.existsSync(name))fs.copyFileSync(name,'docs/'+name);
+console.log('GitHub Pages files built in docs/. All paths are repository-relative.');

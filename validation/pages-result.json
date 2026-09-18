@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-18",
+  "tested_url": "http://127.0.0.1:8080/docs/",
+  "browser": "Chrome",
+  "passed": [
+    "relative subdirectory asset loading",
+    "arm 246 structures",
+    "11 knowledge topics",
+    "model-to-knowledge sync",
+    "teaching Q&A reveal/reset",
+    "skin topic coverage notice",
+    "knowledge-to-model sync with body loading",
+    "mobile panel toggle",
+    "no horizontal overflow"
+  ],
+  "external_requests": 0,
+  "runtime_errors": 0
+}
