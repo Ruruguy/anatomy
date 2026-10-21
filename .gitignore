@@ -1,0 +1,16 @@
+**/node_modules/
+**/.next/
+**/.wrangler/
+**/dist/
+**/.openai/
+**/.DS_Store
+**/.env*
+**/*.pem
+**/*.key
+.build/
+backups/
+*.anatomy.json
+人體解剖教室_雙擊開啟.html
+/source/pediatric/index.html
+/source/pediatric/兒童嬰兒解剖教室_雙擊開啟.html
+/validation/build-result.json

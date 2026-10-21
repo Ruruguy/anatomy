@@ -1,0 +1,64 @@
+/* Shared reading-first layout for both embedded classrooms. */
+:root{--lesson-font:18px;--room-bg:#0b1822;--room-panel:#122631;--room-line:#2d4654;--room-ink:#e5eff2;--room-accent:#a3decf;--model-height:clamp(340px,52dvh,640px)}
+html{overflow-y:auto;scrollbar-gutter:stable}body{margin:0;overflow-x:hidden;background:var(--room-bg);color:var(--room-ink);font-family:system-ui,-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}
+.studio,.app{height:auto;min-height:100dvh;overflow:visible;background:var(--room-bg);color:var(--room-ink);font-family:inherit}
+.studiohead,.app>header{position:relative;inset:auto;display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:110px;height:auto;padding:20px 24px;background:#11232d;border:0;border-bottom:1px solid var(--room-line);pointer-events:auto}
+.studiohead h1,.app>header h1{font-size:25px;line-height:1.45;letter-spacing:.04em;margin:4px 0;color:var(--room-ink)}
+.studiohead p,.app>header p{font-size:14px;line-height:1.7;margin:5px 0;color:#a8bec9}
+.studiohead .kicker,.app>header .eyebrow{font-size:11px;color:var(--room-accent);letter-spacing:.14em;margin:0}
+.studio button,.app button{border-radius:8px;font-size:14px;line-height:1.5;padding:9px 13px;min-height:40px}
+.topactions,.ages{display:flex;flex-wrap:wrap;gap:8px;max-width:none;justify-content:flex-end}
+/* Adult: controls and lesson occupy normal grid rows, never overlap the model. */
+.studio{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:'heading' 'mode' 'systems' 'model' 'tools' 'lesson' 'footer';grid-template-rows:auto auto auto var(--model-height) auto auto auto;align-content:start;position:relative}
+.studiohead{grid-area:heading}.studio .modebar{grid-area:mode;position:relative;inset:auto;padding:12px 24px;flex-wrap:wrap;gap:10px;background:#0e202b}
+.studio .systembar{grid-area:systems;position:relative;inset:auto;justify-content:flex-start;gap:7px;padding:10px 24px;border-bottom:1px solid var(--room-line);background:#0e202b}
+.studio .stage,.studio:has(.infopanel) .stage,.studio:not(:has(.infopanel)) .stage{grid-area:model;position:relative;inset:auto;min-width:0;min-height:0;width:100%;height:100%;background:radial-gradient(ellipse at center,#1b303b,#0b1822 75%)}
+.studio .viewtools{grid-area:tools;position:relative;inset:auto;justify-content:center;max-width:none;padding:12px 20px;gap:8px;flex-wrap:wrap;background:#0e202b;border-bottom:1px solid var(--room-line)}
+.studio .infopanel{grid-area:lesson;position:relative;inset:auto;width:auto;max-width:none;max-height:none;overflow:visible;margin:0;padding:26px 32px;border:0;border-top:1px solid var(--room-line);border-radius:0;background:var(--room-panel)}
+.studio .studiofoot{grid-area:footer;position:relative;inset:auto;padding:14px 24px;background:#0b1822;font-size:12px;flex-wrap:wrap}
+.studio .loadcard{grid-area:model;position:relative;inset:auto;align-self:center;justify-self:center;transform:none;width:min(440px,90%);min-width:0;margin:0}
+/* Pediatric: replace the left navigation and right sidebar with horizontal rows. */
+.app{display:flex;flex-direction:column}.workspace,.workspace.panel-hidden{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto;grid-template-areas:'navigation' 'model' 'lesson';flex:0 0 auto;height:auto;min-height:0}
+.workspace>nav{grid-area:navigation;display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 24px;border:0;border-bottom:1px solid var(--room-line);overflow:visible;background:#0e202b}
+.workspace>nav .caption,.workspace>nav .navnote:not(#import-status){display:none}
+.workspace #systems{display:flex;flex-wrap:wrap;gap:6px;flex-basis:100%;order:2;overflow:visible;padding:8px 0 0}
+.workspace #systems button{font-size:14px;padding:8px 12px;border:1px solid var(--room-line);background:#142a35}
+.workspace #source-skull,.workspace #newborn{width:auto;margin:0;text-align:left;font-size:14px;padding:8px 13px}
+.workspace #source-skull small{display:inline;margin-left:8px;font-size:11px}
+.workspace #import-status{display:block;order:3;flex-basis:100%;margin:0;padding:2px 0;color:#a9c1ca;font-size:12px;line-height:1.7}
+.workspace>main{grid-area:model;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto var(--model-height) auto auto auto;position:relative;height:auto;min-height:0;overflow:visible}
+.workspace .stagehead{grid-row:1;position:relative;inset:auto;padding:16px 24px 4px;align-items:center;pointer-events:auto}.workspace .stagehead h2{font-size:22px;margin:3px 0}.workspace .stagehead button{font-size:14px}
+.workspace .stage-note{grid-row:2;position:relative;inset:auto;padding:4px 24px 12px;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.workspace #canvas-host{grid-row:3;position:relative;inset:auto;width:100%;height:100%;min-height:0}
+.workspace #selected{grid-row:4;position:relative;inset:auto;transform:none;width:auto;margin:10px 24px 0;font-size:14px;line-height:1.8;box-shadow:none}
+.workspace .sys-func-title{font-size:15px}.workspace .sys-func-text{font-size:14px}.workspace .organ-selected-hint{font-size:12px}
+.workspace .toolbar{grid-row:5;position:relative;inset:auto;padding:12px 20px 6px;gap:8px}.workspace .toolbar button{font-size:14px}
+.workspace .help{grid-row:6;position:relative;inset:auto;padding:0 20px 14px;font-size:12px}
+.workspace>#panel{grid-area:lesson;width:auto;max-width:none;max-height:none;height:auto;overflow:visible;padding:26px 32px;border:0;border-top:1px solid var(--room-line);background:var(--room-panel)}
+.workspace.panel-hidden>#panel{display:none}.app>footer{padding:14px 24px;font-size:12px}
+/* Matching, full-width reading surfaces. No nested scrolling for lesson prose. */
+.knowledge,#knowledge{width:100%;max-width:none;min-width:0}
+.knowledge-title,.panel-top{margin:0 0 20px;padding:0 0 14px;border-bottom:1px solid var(--room-line);font-size:18px;display:flex;justify-content:space-between;gap:12px}
+.panel-top .eyebrow{font-size:13px;letter-spacing:.1em}.knowledge-heading h2,#knowledge h2{font-size:27px;line-height:1.5;margin:8px 0 14px}
+.knowledge p,.knowledge .knowledge-intro,.knowledge-organs p,.teaching-note p,.teaching-answer,#knowledge p,#knowledge .active-age p,#knowledge .compare p,#knowledge .answer{font-size:var(--lesson-font);line-height:1.95;color:#d4e3e9;letter-spacing:.015em;overflow-wrap:anywhere}
+.knowledge-intro,#knowledge>p{margin:12px 0 22px}.knowledge-organs p{padding:0 16px 18px 28px}
+.studio .knowledge-organs button{font-size:18px;padding:15px 4px}.knowledge-organs>div{padding:0 8px;background:#10222c;border:1px solid var(--room-line);border-radius:8px;margin:9px 0}
+.knowledge .knowledge-source,#knowledge .coverage,#knowledge .source-list{font-size:14px!important;line-height:1.85}
+.knowledge h3,#knowledge h3{font-size:20px;line-height:1.7;margin:22px 0 10px}
+.studio summary,#panel summary{font-size:16px;line-height:1.8}.topic-grid{grid-template-columns:repeat(auto-fit,minmax(155px,1fr))}
+#knowledge .active-age{margin:18px 0;padding:18px 22px}#knowledge .compare{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}#knowledge .compare strong{font-size:16px}
+#knowledge .question,.teaching-question,.teaching-note{padding:20px 24px}#knowledge .section-label{font-size:14px}
+#knowledge label{font-size:16px}#knowledge input,#knowledge select,#knowledge textarea{font-size:16px}#knowledge .focus-row{flex-wrap:wrap}.knowledge-tabs{max-width:620px}
+.studio .infopanel>.picked{padding:16px 20px;margin:0 0 20px}.picked h2{font-size:22px}.picked p{font-size:16px}.studio .reading-note p{font-size:16px}
+@media(max-width:700px){
+ :root{--lesson-font:17px;--model-height:370px}
+ .studiohead,.app>header{display:flex;flex-direction:column;align-items:flex-start;padding:16px;gap:12px;min-height:0}
+ .studiohead h1,.app>header h1{font-size:22px}.topactions,.ages{justify-content:flex-start;width:100%;margin:0}.ages button{flex:1;min-width:0}
+ .studio .modebar,.studio .systembar,.workspace>nav{padding:12px 16px}.studio .modebar [data-slot=tabs-list]{flex-wrap:wrap;height:auto}
+ .studio .infopanel,.workspace>#panel{padding:22px 18px}.workspace .stagehead{padding:14px 16px 4px}.workspace .stage-note{padding:4px 16px 10px}
+ .workspace #selected{margin:8px 16px 0}.workspace .toolbar,.studio .viewtools{padding:12px;gap:6px}
+ .studio .systembar{gap:6px}.workspace #systems{gap:6px}.workspace #systems button{font-size:13px}
+ #knowledge .compare{grid-template-columns:minmax(0,1fr)}.knowledge-heading h2,#knowledge h2{font-size:24px}
+ #knowledge .question,.teaching-question,.teaching-note{padding:16px}.topic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .studio .loadcard{min-width:0}.studio .studiofoot,.app>footer{padding:14px 16px}
+}

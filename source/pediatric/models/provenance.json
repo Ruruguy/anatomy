@@ -1,0 +1,19 @@
+{
+  "id": "3DPX-003169",
+  "version": 2,
+  "title": "Baby cranium",
+  "creator": "nevitdilmen (Nevit Dilmen)",
+  "ageMonths": 13,
+  "license": "CC BY-SA 4.0",
+  "licenseURL": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "sourceURL": "https://3d.nih.gov/entries/3DPX-003169?version=2",
+  "downloadURL": "https://3d.nih.gov/api/submissions/4608/runs/3f91a3fd-4bd5-48a4-9415-5123947c7618/output-files/97563",
+  "licenseEvidence": "NIH 3D model detail UI: Licensing CC-BY-SA link to 4.0; description Cranium of 13m baby with open sutures.",
+  "retrieved": "2026-10-05",
+  "medicalStatus": "Acquisition modality, diagnosis and expert validation not established from entry description; do not label as normal reference or NIH-certified.",
+  "rawFile": "nih-3169-skull.glb",
+  "sha256": "750e0822961674c25c8e60bc1473d3d0e5112044484b89f49ede5a9b4809f1ad",
+  "rawModifications": "none",
+  "displayTransform": "rotate X -90 degrees; center; uniform scale for fit; recolor ivory; no smoothing/decimation/hole filling",
+  "distribution": "Personal offline use requested; no upload performed"
+}
