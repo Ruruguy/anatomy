@@ -102,3 +102,5 @@ html{overflow-y:auto;scrollbar-gutter:stable}body{margin:0;overflow-x:hidden;bac
 @media(prefers-reduced-motion:reduce){.studio button,.app button{transition:none}}
 
 @media(max-width:700px){.knowledge .knowledge-intro,#knowledge .active-age p,#knowledge .compare p,#knowledge .answer{font-size:17px}}
+
+#research-models{display:flex;flex-wrap:wrap;gap:8px;flex-basis:100%}#research-models button{padding:11px 16px;text-align:left;border-color:#92babc;color:#205e67}#research-models button small{display:block;font-size:11px;color:#6c8c98;margin-top:3px}.reference-coverage{background:#e5f2ef;border-left:3px solid #168f89;border-radius:0 10px 10px 0;padding:20px 24px;margin-bottom:22px}#knowledge .reference-coverage h2{font-size:25px}.reference-coverage p{margin:8px 0}

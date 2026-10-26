@@ -1,0 +1,1502 @@
+{
+  "retrieved": "2026-10-26",
+  "brainSource": "https://zenodo.org/records/7044932",
+  "paper": "https://doi.org/10.1038/s41592-022-01703-z",
+  "brainLicense": "CC-BY-NC-SA-4.0",
+  "piperSource": "https://gitlab.com/piper-project.org/child_pedestrian",
+  "piperLicense": "GPL-3.0-or-later + liability and Open Science terms; original notices in research-source/",
+  "verifiedArchives": [
+    {
+      "file": "IBA-06Months.zip",
+      "verifiedChecksum": "md5:7cdcc7d7709bdfcf0ea3cb79a0883853"
+    },
+    {
+      "file": "IBA-60Months.zip",
+      "verifiedChecksum": "md5:dd22d0a639e4fbd4d990f079dd9475ab"
+    }
+  ],
+  "brainConversions": [
+    {
+      "file": "iba-06months-pial.glb",
+      "bytes": 11798540,
+      "meshes": 2,
+      "vertices": 327684,
+      "triangles": 655360,
+      "sha256": "55509a95a673298bc3a5272976e3977051e1742862e6fde53d69f791798ba76c",
+      "sources": [
+        {
+          "original": "06Months/IBA_06Months_lh.pial.vtk",
+          "sha256": "bc8b7c34a8556cb025af5fdc1f72d62eea7abb8499b53b76fc761d31b8748d8e",
+          "preservedAs": "iba-06-lh.pial.vtk.gz"
+        },
+        {
+          "original": "06Months/IBA_06Months_rh.pial.vtk",
+          "sha256": "c034f1a6b44630bcf7a7ec3b96ae61c27f074b2d67cec74ec616d5702f02c4fe",
+          "preservedAs": "iba-06-rh.pial.vtk.gz"
+        }
+      ]
+    },
+    {
+      "file": "iba-60months-pial.glb",
+      "bytes": 11798536,
+      "meshes": 2,
+      "vertices": 327684,
+      "triangles": 655360,
+      "sha256": "0770f7365534d8a29adba4206ca1f12af2d382573f3e3285da586662696efa7a",
+      "sources": [
+        {
+          "original": "60Months/IBA_60Months_lh.pial.vtk",
+          "sha256": "5b3bdc1552cfc81b259585f65a02e365337993868d633a0c2224549fbcdfd08b",
+          "preservedAs": "iba-60-lh.pial.vtk.gz"
+        },
+        {
+          "original": "60Months/IBA_60Months_rh.pial.vtk",
+          "sha256": "3ffc136f7375fb2339b005ae7f706584dcd863f6cbb3040ee4c56759c1706738",
+          "preservedAs": "iba-60-rh.pial.vtk.gz"
+        }
+      ]
+    }
+  ],
+  "piperConversion": {
+    "file": "piper-6yo-pedestrian.glb",
+    "bytes": 8460472,
+    "meshes": 286,
+    "vertices": 232173,
+    "triangles": 456012,
+    "sha256": "bff48b4f97c6204efa8619ef0798adfc525d06a88c09008bb19f9d51f7ce70a1",
+    "parts": [
+      {
+        "pid": 1000,
+        "name": "HE_SK_HeadSkinLeft",
+        "triangles": 1082
+      },
+      {
+        "pid": 1001,
+        "name": "HE_SK_HeadSkinRight",
+        "triangles": 1082
+      },
+      {
+        "pid": 1010,
+        "name": "HE_SK_NeckSkinLeft",
+        "triangles": 566
+      },
+      {
+        "pid": 1011,
+        "name": "HE_SK_NeckSkinRight",
+        "triangles": 566
+      },
+      {
+        "pid": 1100,
+        "name": "HE_BO_SkullDiploe",
+        "triangles": 9876
+      },
+      {
+        "pid": 1110,
+        "name": "HE_BO_ExternalTable",
+        "triangles": 5332
+      },
+      {
+        "pid": 1120,
+        "name": "HE_BO_InternalTable",
+        "triangles": 4496
+      },
+      {
+        "pid": 1500,
+        "name": "HE_OR_CerebralCortex",
+        "triangles": 4632
+      },
+      {
+        "pid": 1501,
+        "name": "HE_OR_Cerebellum",
+        "triangles": 1808
+      },
+      {
+        "pid": 1502,
+        "name": "HE_CF_CSFFalxCerebri",
+        "triangles": 1416
+      },
+      {
+        "pid": 1503,
+        "name": "HE_CF_CSFTentoriumCerebelli",
+        "triangles": 1396
+      },
+      {
+        "pid": 1504,
+        "name": "HE_CF_CSFSubarachnoidSpace",
+        "triangles": 7600
+      },
+      {
+        "pid": 1506,
+        "name": "HE_MG_TentoriumCerebelli",
+        "triangles": 696
+      },
+      {
+        "pid": 1507,
+        "name": "HE_MG_FalxCerebri",
+        "triangles": 660
+      },
+      {
+        "pid": 1508,
+        "name": "HE_MG_PiaMater",
+        "triangles": 3864
+      },
+      {
+        "pid": 1509,
+        "name": "HE_MG_DuraMater",
+        "triangles": 3644
+      },
+      {
+        "pid": 1510,
+        "name": "HE_Spinal_Cap_2D",
+        "triangles": 520
+      },
+      {
+        "pid": 1700,
+        "name": "HE_FL_ScalpLeft",
+        "triangles": 3200
+      },
+      {
+        "pid": 1701,
+        "name": "HE_FL_ScalpRight",
+        "triangles": 3200
+      },
+      {
+        "pid": 1710,
+        "name": "HE_FL_NeckLeft",
+        "triangles": 2010
+      },
+      {
+        "pid": 1711,
+        "name": "HE_FL_NeckRight",
+        "triangles": 2010
+      },
+      {
+        "pid": 2101,
+        "name": "NK_BO_C1_3D",
+        "triangles": 2168
+      },
+      {
+        "pid": 2102,
+        "name": "NK_BO_C2_3D",
+        "triangles": 3168
+      },
+      {
+        "pid": 2103,
+        "name": "NK_BO_C3_3D",
+        "triangles": 2200
+      },
+      {
+        "pid": 2104,
+        "name": "NK_BO_C4_3D",
+        "triangles": 2680
+      },
+      {
+        "pid": 2105,
+        "name": "NK_BO_C5_3D",
+        "triangles": 2240
+      },
+      {
+        "pid": 2106,
+        "name": "NK_BO_C6_3D",
+        "triangles": 2016
+      },
+      {
+        "pid": 2107,
+        "name": "NK_BO_C7_3D",
+        "triangles": 2320
+      },
+      {
+        "pid": 2108,
+        "name": "NK_BO_T1_3D",
+        "triangles": 2440
+      },
+      {
+        "pid": 2109,
+        "name": "NK_BO_C1_2D",
+        "triangles": 2040
+      },
+      {
+        "pid": 2110,
+        "name": "NK_BO_C2_2D",
+        "triangles": 2132
+      },
+      {
+        "pid": 2111,
+        "name": "NK_BO_C3_2D",
+        "triangles": 1928
+      },
+      {
+        "pid": 2112,
+        "name": "NK_BO_C4_2D",
+        "triangles": 2368
+      },
+      {
+        "pid": 2113,
+        "name": "NK_BO_C5_2D",
+        "triangles": 1968
+      },
+      {
+        "pid": 2114,
+        "name": "NK_BO_C6_2D",
+        "triangles": 1752
+      },
+      {
+        "pid": 2115,
+        "name": "NK_BO_C7_2D",
+        "triangles": 2008
+      },
+      {
+        "pid": 2116,
+        "name": "NK_BO_T1_2D",
+        "triangles": 2440
+      },
+      {
+        "pid": 2117,
+        "name": "Interface_End Plate T1_2D_Rigid",
+        "triangles": 312
+      },
+      {
+        "pid": 2119,
+        "name": "NK_CA_Facet_Articular_Cartilage_2D",
+        "triangles": 996
+      },
+      {
+        "pid": 2120,
+        "name": "NK_CA_Synch_Cartilage_C1_3D",
+        "triangles": 136
+      },
+      {
+        "pid": 2121,
+        "name": "NK_CA_Synch_Cartilage_C2_3D",
+        "triangles": 1532
+      },
+      {
+        "pid": 2122,
+        "name": "NK_CA_Synch_Cartilage_C3_3D",
+        "triangles": 664
+      },
+      {
+        "pid": 2123,
+        "name": "NK_CA_Synch_Cartilage_C4_3D",
+        "triangles": 880
+      },
+      {
+        "pid": 2124,
+        "name": "NK_CA_Synch_Cartilage_C5_3D",
+        "triangles": 656
+      },
+      {
+        "pid": 2125,
+        "name": "NK_CA_Synch_Cartilage_C6_3D",
+        "triangles": 584
+      },
+      {
+        "pid": 2126,
+        "name": "NK_CA_Synch_Cartilage_C7_3D",
+        "triangles": 608
+      },
+      {
+        "pid": 2127,
+        "name": "NK_CA_Synch_Cartilage_C1_2D",
+        "triangles": 56
+      },
+      {
+        "pid": 2128,
+        "name": "NK_CA_Synch_Cartilage_C2_2D",
+        "triangles": 448
+      },
+      {
+        "pid": 2129,
+        "name": "NK_CA_Synch_Cartilage_C3_2D",
+        "triangles": 392
+      },
+      {
+        "pid": 2130,
+        "name": "NK_CA_Synch_Cartilage_C4_2D",
+        "triangles": 568
+      },
+      {
+        "pid": 2131,
+        "name": "NK_CA_Synch_Cartilage_C5_2D",
+        "triangles": 384
+      },
+      {
+        "pid": 2132,
+        "name": "NK_CA_Synch_Cartilage_C6_2D",
+        "triangles": 320
+      },
+      {
+        "pid": 2133,
+        "name": "NK_CA_Synch_Cartilage_C7_2D",
+        "triangles": 296
+      },
+      {
+        "pid": 2201,
+        "name": "NK_FC_Nucleus Pulposus_3D",
+        "triangles": 3360
+      },
+      {
+        "pid": 2202,
+        "name": "NK_FC_Ground Substance_3D",
+        "triangles": 3840
+      },
+      {
+        "pid": 2203,
+        "name": "NK_FC_Annulus Fibrosus_2D",
+        "triangles": 3456
+      },
+      {
+        "pid": 2301,
+        "name": "NK_LG_Vertical Cruciate_2D",
+        "triangles": 116
+      },
+      {
+        "pid": 2302,
+        "name": "NK_LG_Transverse Ligament_2D",
+        "triangles": 96
+      },
+      {
+        "pid": 3100,
+        "name": "UX_BO_L_Forearm_2D",
+        "triangles": 794
+      },
+      {
+        "pid": 3101,
+        "name": "UX_BO_L_Hand_2D",
+        "triangles": 900
+      },
+      {
+        "pid": 3102,
+        "name": "UX_BO_L_Humerus_2D",
+        "triangles": 320
+      },
+      {
+        "pid": 3103,
+        "name": "UX_BO_L_HumerusEpiphysisProximal_2D",
+        "triangles": 156
+      },
+      {
+        "pid": 3104,
+        "name": "UX_BO_L_HumerusEpiphysisProximal_3D",
+        "triangles": 428
+      },
+      {
+        "pid": 3105,
+        "name": "UX_BO_L_HumerusEpiphysisDistal_3D",
+        "triangles": 144
+      },
+      {
+        "pid": 3200,
+        "name": "UX_CA_L_Humerus_3D",
+        "triangles": 420
+      },
+      {
+        "pid": 3201,
+        "name": "UX_CA_L_Scapula_3D",
+        "triangles": 196
+      },
+      {
+        "pid": 3202,
+        "name": "UX_CA_L_Clavicle_3D",
+        "triangles": 128
+      },
+      {
+        "pid": 3205,
+        "name": "UX_CA_L_Humerus_2D_null",
+        "triangles": 152
+      },
+      {
+        "pid": 3206,
+        "name": "UX_CA_L_Scapula_2D_null",
+        "triangles": 28
+      },
+      {
+        "pid": 3207,
+        "name": "UX_CA_R_Acromion_2D_null",
+        "triangles": 80
+      },
+      {
+        "pid": 3400,
+        "name": "UX_ELB_CAP_L_Hum",
+        "triangles": 88
+      },
+      {
+        "pid": 3405,
+        "name": "UX_ELB_CAP_L_Rad",
+        "triangles": 188
+      },
+      {
+        "pid": 3410,
+        "name": "UX_ELB_CAP_R_Flesh",
+        "triangles": 290
+      },
+      {
+        "pid": 4101,
+        "name": "TX_BO_T2_2D",
+        "triangles": 332
+      },
+      {
+        "pid": 4102,
+        "name": "TX_BO_T3_2D",
+        "triangles": 338
+      },
+      {
+        "pid": 4103,
+        "name": "TX_BO_T4_2D",
+        "triangles": 384
+      },
+      {
+        "pid": 4104,
+        "name": "TX_BO_T5_2D",
+        "triangles": 378
+      },
+      {
+        "pid": 4105,
+        "name": "TX_BO_T6_2D",
+        "triangles": 442
+      },
+      {
+        "pid": 4106,
+        "name": "TX_BO_T7_2D",
+        "triangles": 432
+      },
+      {
+        "pid": 4107,
+        "name": "TX_BO_T8_2D",
+        "triangles": 460
+      },
+      {
+        "pid": 4108,
+        "name": "TX_BO_T9_2D",
+        "triangles": 466
+      },
+      {
+        "pid": 4109,
+        "name": "TX_BO_T10_2D",
+        "triangles": 554
+      },
+      {
+        "pid": 4110,
+        "name": "TX_BO_T11_2D",
+        "triangles": 520
+      },
+      {
+        "pid": 4111,
+        "name": "TX_BO_T12_2D",
+        "triangles": 718
+      },
+      {
+        "pid": 4112,
+        "name": "TX_BO_Sternum_2D",
+        "triangles": 608
+      },
+      {
+        "pid": 4113,
+        "name": "TX_BO_Ribs_2D",
+        "triangles": 14264
+      },
+      {
+        "pid": 4114,
+        "name": "TX_BO_L_Rib1_2D_Rigid",
+        "triangles": 52
+      },
+      {
+        "pid": 4115,
+        "name": "TX_BO_R_Rib1_2D_Rigid",
+        "triangles": 52
+      },
+      {
+        "pid": 4116,
+        "name": "TX_BO_L_Rib2_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4117,
+        "name": "TX_BO_R_Rib2_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4118,
+        "name": "TX_BO_L_Rib3_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4119,
+        "name": "TX_BO_R_Rib3_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4120,
+        "name": "TX_BO_L_Rib4_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4121,
+        "name": "TX_BO_R_Rib4_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4122,
+        "name": "TX_BO_L_Rib5_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4123,
+        "name": "TX_BO_R_Rib5_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4124,
+        "name": "TX_BO_L_Rib6_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4125,
+        "name": "TX_BO_R_Rib6_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4126,
+        "name": "TX_BO_L_Rib7_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4127,
+        "name": "TX_BO_R_Rib7_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4128,
+        "name": "TX_BO_L_Rib8_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4129,
+        "name": "TX_BO_R_Rib8_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4130,
+        "name": "TX_BO_L_Rib9_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4131,
+        "name": "TX_BO_R_Rib9_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4132,
+        "name": "TX_BO_L_Rib10_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4133,
+        "name": "TX_BO_R_Rib10_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4134,
+        "name": "TX_BO_L_Rib11_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4135,
+        "name": "TX_BO_R_Rib11_2D_Rigid",
+        "triangles": 54
+      },
+      {
+        "pid": 4136,
+        "name": "TX_BO_R_Scapula_2D",
+        "triangles": 748
+      },
+      {
+        "pid": 4137,
+        "name": "TX_BO_L_Scapula_2D",
+        "triangles": 748
+      },
+      {
+        "pid": 4138,
+        "name": "TX_BO_R_Clavicle_2D",
+        "triangles": 320
+      },
+      {
+        "pid": 4139,
+        "name": "TX_BO_L_Clavicle_2D",
+        "triangles": 320
+      },
+      {
+        "pid": 4140,
+        "name": "TX_BO_Sternum_2D_rigid",
+        "triangles": 36
+      },
+      {
+        "pid": 4141,
+        "name": "TX_BO_L_Scapula_3D",
+        "triangles": 748
+      },
+      {
+        "pid": 4142,
+        "name": "TX_BO_R_Scapula_3D",
+        "triangles": 748
+      },
+      {
+        "pid": 4143,
+        "name": "TX_BO_L_Clavicle_3D",
+        "triangles": 368
+      },
+      {
+        "pid": 4144,
+        "name": "TX_BO_R_Clavicle_3D",
+        "triangles": 368
+      },
+      {
+        "pid": 4146,
+        "name": "TX_BO_T2_3D_Rigid",
+        "triangles": 332
+      },
+      {
+        "pid": 4147,
+        "name": "TX_BO_T3_3D_Rigid",
+        "triangles": 338
+      },
+      {
+        "pid": 4148,
+        "name": "TX_BO_T4_3D_Rigid",
+        "triangles": 384
+      },
+      {
+        "pid": 4149,
+        "name": "TX_BO_T5_3D_Rigid",
+        "triangles": 378
+      },
+      {
+        "pid": 4150,
+        "name": "TX_BO_T6_3D_Rigid",
+        "triangles": 442
+      },
+      {
+        "pid": 4151,
+        "name": "TX_BO_T7_3D_Rigid",
+        "triangles": 432
+      },
+      {
+        "pid": 4152,
+        "name": "TX_BO_T8_3D_Rigid",
+        "triangles": 460
+      },
+      {
+        "pid": 4153,
+        "name": "TX_BO_T9_3D_Rigid",
+        "triangles": 466
+      },
+      {
+        "pid": 4154,
+        "name": "TX_BO_T10_3D_Rigid",
+        "triangles": 554
+      },
+      {
+        "pid": 4155,
+        "name": "TX_BO_T11_3D_Rigid",
+        "triangles": 520
+      },
+      {
+        "pid": 4156,
+        "name": "TX_BO_T12_3D_Rigid",
+        "triangles": 718
+      },
+      {
+        "pid": 4157,
+        "name": "TX_BO_Sternum_3D",
+        "triangles": 608
+      },
+      {
+        "pid": 4158,
+        "name": "TX_BO_Ribs_3D",
+        "triangles": 15448
+      },
+      {
+        "pid": 4200,
+        "name": "TX_CA_Ribcage_2D",
+        "triangles": 4742
+      },
+      {
+        "pid": 4201,
+        "name": "TX_CA_Ribcage_3D",
+        "triangles": 4742
+      },
+      {
+        "pid": 4202,
+        "name": "TX_FC_IntervertebralDisc_2D",
+        "triangles": 474
+      },
+      {
+        "pid": 4500,
+        "name": "TX_OR_L_Lung_2D",
+        "triangles": 8216
+      },
+      {
+        "pid": 4501,
+        "name": "TX_OR_R_Lung_2D",
+        "triangles": 8172
+      },
+      {
+        "pid": 4502,
+        "name": "TX_OR_Heart_2D",
+        "triangles": 2304
+      },
+      {
+        "pid": 4700,
+        "name": "TX_MU_Intercostal_2D",
+        "triangles": 30476
+      },
+      {
+        "pid": 4701,
+        "name": "TX_MU_Diaphragm_2D",
+        "triangles": 4431
+      },
+      {
+        "pid": 4702,
+        "name": "TX_FT_Thymus_2D",
+        "triangles": 2316
+      },
+      {
+        "pid": 4703,
+        "name": "TX_FT_HeartBelow_2D",
+        "triangles": 356
+      },
+      {
+        "pid": 4704,
+        "name": "TX_MU_intercostal_3D",
+        "triangles": 30476
+      },
+      {
+        "pid": 4705,
+        "name": "TX_MU_Subscapula_3D",
+        "triangles": 2176
+      },
+      {
+        "pid": 4706,
+        "name": "TX_FT_HeartBelow_3D",
+        "triangles": 356
+      },
+      {
+        "pid": 4707,
+        "name": "TX_FT_Thymus_3D",
+        "triangles": 2316
+      },
+      {
+        "pid": 4708,
+        "name": "TX_MU_L_Subscapula_2D",
+        "triangles": 1088
+      },
+      {
+        "pid": 4709,
+        "name": "TX_MU_R_Subscapula_2D",
+        "triangles": 1088
+      },
+      {
+        "pid": 4710,
+        "name": "TX_MU_L_Glenohumeral_Capsule_2D",
+        "triangles": 171
+      },
+      {
+        "pid": 4711,
+        "name": "TX_MU_L_Acromio_Claviculo_Capsule_2D",
+        "triangles": 16
+      },
+      {
+        "pid": 4712,
+        "name": "TX_MU_R_Glenohumeral_Capsule_2D",
+        "triangles": 174
+      },
+      {
+        "pid": 4713,
+        "name": "TX_MU_R_Acromio_Claviculo_Capsule_2D",
+        "triangles": 16
+      },
+      {
+        "pid": 4714,
+        "name": "TX_MU_R_subclavicle_cavity_2D",
+        "triangles": 120
+      },
+      {
+        "pid": 4715,
+        "name": "TX_MU_Sterno_Claviculo_Capsule_2D",
+        "triangles": 66
+      },
+      {
+        "pid": 4716,
+        "name": "TX_MU_L_subclavicle_cavity_2D",
+        "triangles": 140
+      },
+      {
+        "pid": 5100,
+        "name": "UX_BO_R_Forearm_2D",
+        "triangles": 794
+      },
+      {
+        "pid": 5101,
+        "name": "UX_BO_R_Hand_2D",
+        "triangles": 900
+      },
+      {
+        "pid": 5102,
+        "name": "UX_BO_R_Humerus_2D",
+        "triangles": 320
+      },
+      {
+        "pid": 5103,
+        "name": "UX_BO_R_HumerusEpiphysisProximal_2D",
+        "triangles": 156
+      },
+      {
+        "pid": 5104,
+        "name": "UX_BO_R_HumerusEpiphysisDistal_3D",
+        "triangles": 144
+      },
+      {
+        "pid": 5105,
+        "name": "UX_BO_R_HumerusEpiphysisProximal_3D",
+        "triangles": 428
+      },
+      {
+        "pid": 5200,
+        "name": "UX_CA_R_Humerus_3D",
+        "triangles": 420
+      },
+      {
+        "pid": 5201,
+        "name": "UX_CA_R_Scapula_3D",
+        "triangles": 196
+      },
+      {
+        "pid": 5202,
+        "name": "UX_CA_R_Clavicle_3D",
+        "triangles": 128
+      },
+      {
+        "pid": 5205,
+        "name": "UX_CA_R_Humerus_2D_null",
+        "triangles": 152
+      },
+      {
+        "pid": 5206,
+        "name": "UX_CA_R_Scapula_2D_null",
+        "triangles": 28
+      },
+      {
+        "pid": 5207,
+        "name": "UX_CA_R_Acromion_2D_null",
+        "triangles": 80
+      },
+      {
+        "pid": 5400,
+        "name": "UX_ELB_CAP_R_Hum",
+        "triangles": 88
+      },
+      {
+        "pid": 5405,
+        "name": "UX_ELB_CAP_R_Rad",
+        "triangles": 188
+      },
+      {
+        "pid": 5410,
+        "name": "UX_ELB_CAP_R_Flesh",
+        "triangles": 304
+      },
+      {
+        "pid": 6100,
+        "name": "AB_BO_L1_2D",
+        "triangles": 752
+      },
+      {
+        "pid": 6101,
+        "name": "AB_BO_L2_2D",
+        "triangles": 746
+      },
+      {
+        "pid": 6102,
+        "name": "AB_BO_L3_2D",
+        "triangles": 630
+      },
+      {
+        "pid": 6103,
+        "name": "AB_BO_L4_2D",
+        "triangles": 624
+      },
+      {
+        "pid": 6104,
+        "name": "AB_BO_L5_2D",
+        "triangles": 732
+      },
+      {
+        "pid": 6105,
+        "name": "AB_BO_L1_3D_Rigid",
+        "triangles": 752
+      },
+      {
+        "pid": 6106,
+        "name": "AB_BO_L2_3D_Rigid",
+        "triangles": 746
+      },
+      {
+        "pid": 6107,
+        "name": "AB_BO_L3_3D_Rigid",
+        "triangles": 632
+      },
+      {
+        "pid": 6108,
+        "name": "AB_BO_L4_3D_Rigid",
+        "triangles": 624
+      },
+      {
+        "pid": 6109,
+        "name": "AB_BO_L5_3D_Rigid",
+        "triangles": 732
+      },
+      {
+        "pid": 6500,
+        "name": "AB_OR_L_Kidney_2D",
+        "triangles": 754
+      },
+      {
+        "pid": 6501,
+        "name": "AB_OR_R_Kidney_2D",
+        "triangles": 746
+      },
+      {
+        "pid": 6502,
+        "name": "AB_OR_Liver_2D",
+        "triangles": 4126
+      },
+      {
+        "pid": 6503,
+        "name": "AB_OR_Spleen_2D",
+        "triangles": 1194
+      },
+      {
+        "pid": 6504,
+        "name": "AB_OR_Stomach_2D",
+        "triangles": 2038
+      },
+      {
+        "pid": 6505,
+        "name": "AB_OR_Gallbladder_2D",
+        "triangles": 170
+      },
+      {
+        "pid": 6506,
+        "name": "AB_OR_L_Kidney_3D",
+        "triangles": 754
+      },
+      {
+        "pid": 6507,
+        "name": "AB_OR_R_Kidney_3D",
+        "triangles": 746
+      },
+      {
+        "pid": 6508,
+        "name": "AB_OR_Liver_3D",
+        "triangles": 4126
+      },
+      {
+        "pid": 6509,
+        "name": "AB_OR_Spleen_3D",
+        "triangles": 1194
+      },
+      {
+        "pid": 6510,
+        "name": "AB_OR_Stomach_3D",
+        "triangles": 2038
+      },
+      {
+        "pid": 6511,
+        "name": "AB_OR_Gallbladder_3D",
+        "triangles": 170
+      },
+      {
+        "pid": 6700,
+        "name": "AB_FT_Retroperitoneum_2D",
+        "triangles": 5392
+      },
+      {
+        "pid": 6701,
+        "name": "AB_MU_AbdominalWall_2D",
+        "triangles": 5524
+      },
+      {
+        "pid": 6702,
+        "name": "AB_MU_ObturatorForamen_2D_Rigid",
+        "triangles": 364
+      },
+      {
+        "pid": 6703,
+        "name": "AB_FT_Pancreas_2D",
+        "triangles": 884
+      },
+      {
+        "pid": 6704,
+        "name": "AB_FT_T11Around_2D",
+        "triangles": 756
+      },
+      {
+        "pid": 6705,
+        "name": "AB_FT_AbdominalCavityBag_2D",
+        "triangles": 4908
+      },
+      {
+        "pid": 6706,
+        "name": "AB_MU_AbdominalWall_3D",
+        "triangles": 5522
+      },
+      {
+        "pid": 6707,
+        "name": "AB_FT_Pancreas_3D",
+        "triangles": 884
+      },
+      {
+        "pid": 6708,
+        "name": "AB_FT_Retroperitoneum_3D",
+        "triangles": 5392
+      },
+      {
+        "pid": 6709,
+        "name": "AB_FT_T11Around_3D",
+        "triangles": 756
+      },
+      {
+        "pid": 7009,
+        "name": "LX_SK_L_FootSkin_2D",
+        "triangles": 1514
+      },
+      {
+        "pid": 7101,
+        "name": "LX_BO_L_FemurEpiphysisProximal_3D",
+        "triangles": 912
+      },
+      {
+        "pid": 7102,
+        "name": "LX_BO_L_FemurMetaphysisProximal_2D",
+        "triangles": 32
+      },
+      {
+        "pid": 7103,
+        "name": "LX_BO_L_FemurDiaphysis_2D",
+        "triangles": 272
+      },
+      {
+        "pid": 7104,
+        "name": "LX_BO_L_FemurMetaphysisDistal_2D",
+        "triangles": 436
+      },
+      {
+        "pid": 7105,
+        "name": "LX_BO_L_FemurEpiphysisDistal_2D_Rigid",
+        "triangles": 988
+      },
+      {
+        "pid": 7111,
+        "name": "LX_BO_L_Patella_3D_Rigid",
+        "triangles": 208
+      },
+      {
+        "pid": 7112,
+        "name": "LX_BO_L_Patella_2D_Rigid",
+        "triangles": 208
+      },
+      {
+        "pid": 7121,
+        "name": "LX_BO_L_TibiaEpiphysisProximal_2D_Rigid",
+        "triangles": 454
+      },
+      {
+        "pid": 7122,
+        "name": "LX_BO_L_TibiaMetaphysisProximal_2D_Rigid",
+        "triangles": 176
+      },
+      {
+        "pid": 7123,
+        "name": "LX_BO_L_TibiaDiaphysis_2D",
+        "triangles": 352
+      },
+      {
+        "pid": 7125,
+        "name": "LX_BO_L_TibiaEpiphysisDistal_2D_Rigid",
+        "triangles": 280
+      },
+      {
+        "pid": 7131,
+        "name": "LX_BO_L_FibulaEpiphysisProximal_2D_Rigid",
+        "triangles": 186
+      },
+      {
+        "pid": 7133,
+        "name": "LX_BO_L_FibulaDiaphysis_2D",
+        "triangles": 384
+      },
+      {
+        "pid": 7135,
+        "name": "LX_BO_L_FibulaEpiphisisDistal_2D_Rigid",
+        "triangles": 200
+      },
+      {
+        "pid": 7170,
+        "name": "LX_BO_L_Foot_2D_Rigid",
+        "triangles": 10730
+      },
+      {
+        "pid": 7201,
+        "name": "LX_CA_L_FemurEpiphysisProximal_3D",
+        "triangles": 800
+      },
+      {
+        "pid": 7400,
+        "name": "LX_L_Interior_knee_femur",
+        "triangles": 988
+      },
+      {
+        "pid": 7405,
+        "name": "LX_L_Interior_knee_tib_fib",
+        "triangles": 446
+      },
+      {
+        "pid": 7410,
+        "name": "LX_L_Interior_knee_FL",
+        "triangles": 1223
+      },
+      {
+        "pid": 7430,
+        "name": "LX_L_CAP_Fem",
+        "triangles": 184
+      },
+      {
+        "pid": 7435,
+        "name": "LX_L_CAP_PV",
+        "triangles": 165
+      },
+      {
+        "pid": 8101,
+        "name": "PV_BO_Pelvis_3D",
+        "triangles": 3388
+      },
+      {
+        "pid": 8105,
+        "name": "PV_BO_Pelvis_2D",
+        "triangles": 3388
+      },
+      {
+        "pid": 8110,
+        "name": "PV_BO_Sacrum_2D_Rigid",
+        "triangles": 1346
+      },
+      {
+        "pid": 8201,
+        "name": "PV_CA_PelvicCartilage_3D",
+        "triangles": 1580
+      },
+      {
+        "pid": 8202,
+        "name": "PV_CA_SymphysisPubica_3D",
+        "triangles": 120
+      },
+      {
+        "pid": 8203,
+        "name": "PV_CA_SacroiliacJoint_2D",
+        "triangles": 236
+      },
+      {
+        "pid": 8310,
+        "name": "PV_LG_L_HipCapsule_2D",
+        "triangles": 159
+      },
+      {
+        "pid": 8320,
+        "name": "PV_LG_R_HipCapsule_2D",
+        "triangles": 161
+      },
+      {
+        "pid": 9009,
+        "name": "LX_SK_R_FootSkin_2D",
+        "triangles": 1514
+      },
+      {
+        "pid": 9101,
+        "name": "LX_BO_R_FemurEpiphysisProximal_3D",
+        "triangles": 912
+      },
+      {
+        "pid": 9102,
+        "name": "LX_BO_R_FemurMetaphysisProximal_2D",
+        "triangles": 32
+      },
+      {
+        "pid": 9103,
+        "name": "LX_BO_R_FemurDiaphysis_2D",
+        "triangles": 272
+      },
+      {
+        "pid": 9104,
+        "name": "LX_BO_R_FemurMetaphysisDistal_2D",
+        "triangles": 436
+      },
+      {
+        "pid": 9105,
+        "name": "LX_BO_R_FemurEpiphysisDistal_2D_Rigid",
+        "triangles": 988
+      },
+      {
+        "pid": 9111,
+        "name": "LX_BO_R_Patella_3D_Rigid",
+        "triangles": 208
+      },
+      {
+        "pid": 9112,
+        "name": "LX_BO_R_Patella_2D_Rigid",
+        "triangles": 208
+      },
+      {
+        "pid": 9121,
+        "name": "LX_BO_R_TibiaEpiphysisProximal_2D",
+        "triangles": 454
+      },
+      {
+        "pid": 9122,
+        "name": "LX_BO_R_TibiaMetaphysisProximal_2D",
+        "triangles": 176
+      },
+      {
+        "pid": 9123,
+        "name": "LX_BO_R_TibiaDiaphysis_2D",
+        "triangles": 352
+      },
+      {
+        "pid": 9125,
+        "name": "LX_BO_R_TibiaEpiphysisDistal_2D_Rigid",
+        "triangles": 280
+      },
+      {
+        "pid": 9131,
+        "name": "LX_BO_R_FibulaEpiphysisProximal_2D_Rigid",
+        "triangles": 186
+      },
+      {
+        "pid": 9133,
+        "name": "LX_BO_R_FibulaDiaphysis_2D",
+        "triangles": 384
+      },
+      {
+        "pid": 9135,
+        "name": "LX_BO_R_FibulaEpiphisisDistal_2D",
+        "triangles": 200
+      },
+      {
+        "pid": 9170,
+        "name": "LX_BO_R_Foot_2D_Rigid",
+        "triangles": 10730
+      },
+      {
+        "pid": 9201,
+        "name": "LX_CA_R_FemurEpiphysisProximal_3D",
+        "triangles": 800
+      },
+      {
+        "pid": 9400,
+        "name": "LX_R_Interior_knee_femur",
+        "triangles": 988
+      },
+      {
+        "pid": 9405,
+        "name": "LX_R_Interior_knee_tib_fib",
+        "triangles": 446
+      },
+      {
+        "pid": 9410,
+        "name": "LX_R_Interior_knee_tib_fib",
+        "triangles": 1369
+      },
+      {
+        "pid": 9430,
+        "name": "LX_R_CAP_Fem",
+        "triangles": 184
+      },
+      {
+        "pid": 9435,
+        "name": "LX_R_CAP_PV",
+        "triangles": 165
+      },
+      {
+        "pid": 10000,
+        "name": "FL_L_ArmLower_3D",
+        "triangles": 1082
+      },
+      {
+        "pid": 10001,
+        "name": "FL_L_ArmUpper_3D",
+        "triangles": 1966
+      },
+      {
+        "pid": 10002,
+        "name": "FL_L_Elbowl_3D",
+        "triangles": 920
+      },
+      {
+        "pid": 10003,
+        "name": "FL_L_Knee_3D",
+        "triangles": 2142
+      },
+      {
+        "pid": 10004,
+        "name": "FL_L_LowerLeg_3D",
+        "triangles": 2466
+      },
+      {
+        "pid": 10005,
+        "name": "FL_L_Thigh_3D",
+        "triangles": 2754
+      },
+      {
+        "pid": 10006,
+        "name": "FL_L_Trunk_3D",
+        "triangles": 16340
+      },
+      {
+        "pid": 10007,
+        "name": "FL_L_Waist_3D",
+        "triangles": 232
+      },
+      {
+        "pid": 15000,
+        "name": "FL_R_ArmLower_3D",
+        "triangles": 1082
+      },
+      {
+        "pid": 15001,
+        "name": "FL_R_ArmUpper_3D",
+        "triangles": 1918
+      },
+      {
+        "pid": 15002,
+        "name": "FL_R_Elbowl_3D",
+        "triangles": 900
+      },
+      {
+        "pid": 15003,
+        "name": "FL_R_Knee_3D",
+        "triangles": 2196
+      },
+      {
+        "pid": 15004,
+        "name": "FL_R_LowerLeg_3D",
+        "triangles": 2466
+      },
+      {
+        "pid": 15005,
+        "name": "FL_R_Thigh_3D",
+        "triangles": 2766
+      },
+      {
+        "pid": 15006,
+        "name": "FL_R_Trunk_3D",
+        "triangles": 16068
+      },
+      {
+        "pid": 15007,
+        "name": "FL_R_Waist_3D",
+        "triangles": 232
+      },
+      {
+        "pid": 20000,
+        "name": "SK_L_ArmLower_2D",
+        "triangles": 352
+      },
+      {
+        "pid": 20001,
+        "name": "SK_L_ArmUpper_2D",
+        "triangles": 1163
+      },
+      {
+        "pid": 20002,
+        "name": "SK_L_Elbowl_2D",
+        "triangles": 364
+      },
+      {
+        "pid": 20003,
+        "name": "SK_L_Knee_2D",
+        "triangles": 577
+      },
+      {
+        "pid": 20004,
+        "name": "SK_L_LowerLeg_2D",
+        "triangles": 966
+      },
+      {
+        "pid": 20005,
+        "name": "SK_L_Thigh_2D",
+        "triangles": 1447
+      },
+      {
+        "pid": 20006,
+        "name": "SK_L_Trunk_2D",
+        "triangles": 3200
+      },
+      {
+        "pid": 20007,
+        "name": "SK_L_Waist_2D",
+        "triangles": 55
+      },
+      {
+        "pid": 20008,
+        "name": "SK_L_Hand_2D_Rigid",
+        "triangles": 760
+      },
+      {
+        "pid": 25000,
+        "name": "SK_R_ArmLower_2D",
+        "triangles": 352
+      },
+      {
+        "pid": 25001,
+        "name": "SK_R_ArmUpper_2D",
+        "triangles": 1103
+      },
+      {
+        "pid": 25002,
+        "name": "SK_R_Elbowl_2D",
+        "triangles": 338
+      },
+      {
+        "pid": 25003,
+        "name": "SK_R_Knee_2D",
+        "triangles": 486
+      },
+      {
+        "pid": 25004,
+        "name": "SK_R_LowerLeg_2D",
+        "triangles": 966
+      },
+      {
+        "pid": 25005,
+        "name": "SK_R_Thigh_2D",
+        "triangles": 1360
+      },
+      {
+        "pid": 25006,
+        "name": "SK_R_Trunk_2D",
+        "triangles": 3112
+      },
+      {
+        "pid": 25007,
+        "name": "SK_R_Waist_2D",
+        "triangles": 55
+      },
+      {
+        "pid": 25008,
+        "name": "SK_R_Hand_2D_Rigid",
+        "triangles": 760
+      }
+    ],
+    "omittedUndefinedParts": []
+  },
+  "displayChanges": "Rigid coordinate permutation/rotation; browser centers and uniformly scales. No smoothing, decimation, guessed gyri, or adult-to-child scaling."
+}

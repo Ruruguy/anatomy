@@ -1,0 +1,5 @@
+Surface-Volume Atlases of the Infant Brain
+Sahar Ahmad and Pew-Thian Yap, UNC-Chapel Hill. Version v1.0 (2022).
+https://zenodo.org/records/7044932
+CC BY-NC-SA 4.0: https://creativecommons.org/licenses/by-nc-sa/4.0/
+Derived GLB files preserve original coordinates after a rigid coordinate-axis transform; normals generated for display; no smoothing or simplification. Original pial VTK files preserved as gzip archives.
