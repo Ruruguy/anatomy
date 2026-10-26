@@ -1,3 +1,5 @@
+import {setupMedicalLighting,setSurfacePresentation} from 'medical-rendering';
+let surfaceStyle='atlas';
 import {setReadableMaterial} from 'display-material';
 let readableMode=false;
 import {readFiles,parseModel,packBundle,escapeHTML,disposeObject} from 'model-import';
@@ -29,13 +31,13 @@ function mat(item,opts={}){
   const baseCol = opts.color || color(item.system);
   return new T.MeshStandardMaterial({
     color: baseCol,
-    roughness: opts.roughness ?? 0.38,
-    metalness: opts.metalness ?? 0.04,
+    roughness: opts.roughness ?? 0.67,
+    metalness: opts.metalness ?? 0,
     ...opts
   });
 }
 function ell(item,pos,scale,opts={}){
-  const geom = new T.SphereGeometry(1, 32, 24);
+  const geom = new T.SphereGeometry(1, 48, 32);
   const m = new T.Mesh(geom, mat(item, opts));
   m.position.fromArray(pos);
   m.scale.fromArray(scale);
@@ -45,8 +47,8 @@ function ell(item,pos,scale,opts={}){
 }
 function tube(item,points,r=.025,opts={}){
   const curve = new T.CatmullRomCurve3(points.map(vec));
-  const segs = Math.max(16, points.length * 9);
-  const geom = new T.TubeGeometry(curve, segs, r, 12, false);
+  const segs = Math.max(24, points.length * 12);
+  const geom = new T.TubeGeometry(curve, segs, r, 16, false);
   const m = new T.Mesh(geom, mat(item, opts));
   m.userData.item = item;
   item.object.add(m);
@@ -57,7 +59,7 @@ function bone(item,a,b,r=.042,headScale=1.4){
   ell(item, a, [r*headScale, r*1.2, r*headScale], {color:'#eee7db', roughness:0.42});
   ell(item, b, [r*headScale, r*1.2, r*headScale], {color:'#eee7db', roughness:0.42});
 }
-function dispose(){setReadableMaterial(root,false);readableMode=false;$('#readable-material').setAttribute('aria-pressed','false');disposeObject(root);root.clear();items=[];selected=null}
+function dispose(){surfaceStyle='atlas';$('#surface-style').setAttribute('aria-pressed','false');$('#surface-style').textContent='灰白標本';setReadableMaterial(root,false);readableMode=false;$('#readable-material').setAttribute('aria-pressed','false');disposeObject(root);root.clear();items=[];selected=null}
 
 
 function buildModel(){
@@ -631,8 +633,9 @@ $('#systems').onclick=e=>{const b=e.target.closest('[data-topic]');if(b)setTopic
 document.querySelectorAll('[data-age]').forEach(b=>b.onclick=()=>{age=b.dataset.age;document.querySelectorAll('[data-age]').forEach(x=>x.setAttribute('aria-pressed',x===b));expanded=false;$('#explode').setAttribute('aria-pressed','false');$('#explode').textContent='展開';if(root)buildModel();else renderKnowledge();choose(null)});
 $('#panel-toggle').onclick=()=>{const hide=$('.workspace').classList.toggle('panel-hidden');$('#panel-toggle').textContent=hide?'顯示教學':'收起教學';$('#panel-toggle').setAttribute('aria-expanded',!hide)};
 function setDrag(v){dragMode=v;$('#pan').setAttribute('aria-pressed',v==='pan');$('#rotate').setAttribute('aria-pressed',v==='rotate');$('.help').textContent=v==='pan'?'拖曳平移 · 右鍵旋轉 · 滾輪縮放 · 觸控雙指縮放':'拖曳旋轉 · 右鍵平移 · 滾輪縮放 · 觸控雙指縮放';if(!controls)return;controls.mouseButtons.LEFT=v==='pan'?T.MOUSE.PAN:T.MOUSE.ROTATE;controls.mouseButtons.RIGHT=v==='pan'?T.MOUSE.ROTATE:T.MOUSE.PAN;controls.touches.ONE=v==='pan'?T.TOUCH.PAN:T.TOUCH.ROTATE;controls.touches.TWO=v==='pan'?T.TOUCH.DOLLY_ROTATE:T.TOUCH.DOLLY_PAN;renderer.domElement.style.cursor=v==='pan'?'move':'grab'}
-function setClarity(enabled){readableMode=enabled;setReadableMaterial(root,enabled);$('#readable-material').setAttribute('aria-pressed',enabled);if(importedMode&&$('#part-opacity'))$('#part-opacity').oninput({target:{value:String(importOpacity)}});choose(selected);}
+function setClarity(enabled){setSurfacePresentation(root,'atlas');readableMode=enabled;setReadableMaterial(root,enabled);$('#readable-material').setAttribute('aria-pressed',enabled);if(importedMode&&$('#part-opacity'))$('#part-opacity').oninput({target:{value:String(importOpacity)}});setSurfacePresentation(root,surfaceStyle);choose(selected);}
 $('#readable-material').onclick=()=>{if(root)setClarity(!readableMode)};
+$('#surface-style').onclick=()=>{if(!root)return;surfaceStyle=surfaceStyle==='atlas'?'specimen':'atlas';setSurfacePresentation(root,surfaceStyle);$('#surface-style').setAttribute('aria-pressed',surfaceStyle==='specimen');$('#surface-style').textContent=surfaceStyle==='specimen'?'返回系統配色':'灰白標本'};
 $('#pan').onclick=()=>setDrag('pan');$('#rotate').onclick=()=>setDrag('rotate');$('#reset').onclick=fitVisible;$('#top-view').onclick=()=>{fitVisible();if(camera){const d=camera.position.distanceTo(controls.target);camera.position.copy(controls.target).add(new T.Vector3(0,d,.001));controls.update()}};$('#back').onclick=()=>{fitVisible();if(camera){const d=camera.position.z-controls.target.z;camera.position.z=controls.target.z-d;controls.update()}};
 function zoom(f){if(!camera)return;const off=camera.position.clone().sub(controls.target);off.setLength(T.MathUtils.clamp(off.length()*f,.12,35));camera.position.copy(controls.target).add(off);controls.update()}
 $('#zoom-in').onclick=()=>zoom(.8);$('#zoom-out').onclick=()=>zoom(1.25);$('#explode').onclick=()=>{expanded=!expanded;$('#explode').setAttribute('aria-pressed',expanded);$('#explode').textContent=expanded?'組合':'展開';choose(null);applyVisibility();fitVisible()};$('#label-toggle').onclick=()=>{labelsOn=!labelsOn;$('#label-toggle').setAttribute('aria-pressed',labelsOn);$('#labels').hidden=!labelsOn};
@@ -696,12 +699,7 @@ $('#model-files').onchange=e=>{const files=Array.from(e.target.files);e.target.v
 $('#show-imported').onclick=()=>{if(importedState)importLocal(importedState)};
 
 renderKnowledge();
-try{renderer=new T.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0x000000,0);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;host.prepend(renderer.domElement);scene=new T.Scene();root=new T.Group();scene.add(root);camera=new T.PerspectiveCamera(34,1,.01,100);camera.position.set(0,2,7);controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=false;controls.screenSpacePanning=true;controls.zoomToCursor=true;controls.minDistance=.12;controls.maxDistance=35;setDrag('pan');scene.add(new T.HemisphereLight(0xf2f7fc,0x242d35,2.4));
-for(const [x,y,z,intensity,col] of [[-3,6,5,2.6,0xffffff],[4,2,2,1.8,0xf4fbff],[0,5,-4,2.2,0xdceaff],[-4,-2,-2,1.1,0xa5c4d4],[3,-3,4,0.9,0xffffff],[0,-4,0,0.6,0x3a5360],[2,4,-5,1.4,0xcceeff]]){
-  const light=new T.DirectionalLight(col,intensity);
-  light.position.set(x,y,z);
-  scene.add(light);
-}
+try{renderer=new T.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0x000000,0);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;host.prepend(renderer.domElement);scene=new T.Scene();root=new T.Group();scene.add(root);camera=new T.PerspectiveCamera(34,1,.01,100);camera.position.set(0,2,7);controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=false;controls.screenSpacePanning=true;controls.zoomToCursor=true;controls.minDistance=.12;controls.maxDistance=35;setDrag('pan');setupMedicalLighting(T,renderer,scene,camera);
  const resize=()=>{const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};new ResizeObserver(resize).observe(host);resize();
  let down=null,moved=false;const active=new Set();renderer.domElement.addEventListener('pointerdown',e=>{active.add(e.pointerId);if(active.size>1)moved=true;else{down=[e.clientX,e.clientY];moved=false}});renderer.domElement.addEventListener('pointermove',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)moved=true});renderer.domElement.addEventListener('pointercancel',e=>{active.delete(e.pointerId);down=null;moved=true});renderer.domElement.addEventListener('pointerup',e=>{active.delete(e.pointerId);if(e.button!==0||moved||!down||active.size)return;const rect=renderer.domElement.getBoundingClientRect(),pointer=new T.Vector2((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1),ray=new T.Raycaster();ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(items.filter(i=>i.object.visible&&(topic==='skin'||i.system!=='skin')).map(i=>i.object),true);choose(hits[0]?.object.userData.item||null);down=null});
  buildModel();$('#loading').remove();renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);drawLabels()});

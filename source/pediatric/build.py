@@ -2,7 +2,7 @@ from pathlib import Path
 import base64,json,re
 root=Path(__file__).resolve().parent
 imports={}
-for name,file in [('display-material','display-material.js'),('model-import','model-import.js'),('stl','vendor/STLLoader.js'),('three','vendor/three.module.js'),('three/core','vendor/three.core.js'),('orbit','vendor/OrbitControls.js'),('content','content.js'),('gltf','vendor/GLTFLoader.js'),('geometry-utils','vendor/BufferGeometryUtils.js')]:
+for name,file in [('medical-rendering','../../site/rendering-profile.js'),('display-material','display-material.js'),('model-import','model-import.js'),('stl','vendor/STLLoader.js'),('three','vendor/three.module.js'),('three/core','vendor/three.core.js'),('orbit','vendor/OrbitControls.js'),('content','content.js'),('gltf','vendor/GLTFLoader.js'),('geometry-utils','vendor/BufferGeometryUtils.js')]:
     source=(root/file).read_text().replace("'./three.core.js'","'three/core'").replace("'../utils/BufferGeometryUtils.js'","'geometry-utils'")
     imports[name]='data:text/javascript;base64,'+base64.b64encode(source.encode()).decode()
 asset='data:model/gltf-binary;base64,'+base64.b64encode((root/'models/nih-3169-skull.glb').read_bytes()).decode()

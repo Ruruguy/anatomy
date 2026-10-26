@@ -5,7 +5,7 @@ const require=createRequire(import.meta.url);
 const {build}=createRequire(require.resolve('vite/package.json'))('esbuild');
 const root=path.resolve(import.meta.dirname,'..');process.chdir(root);
 const out='docs';for(const dir of ['assets','models','draco'])fs.mkdirSync(path.join(out,dir),{recursive:true});
-await build({entryPoints:['offline-3d-entry.tsx'],bundle:true,outfile:'docs/assets/app.js',minify:true,jsx:'automatic',format:'iife',legalComments:'eof',define:{'process.env.NODE_ENV':'"production"'},alias:{'@':root},tsconfig:'tsconfig.json'});
+await build({absWorkingDir:root,entryPoints:['offline-3d-entry.tsx'],bundle:true,outfile:'docs/assets/app.js',minify:true,jsx:'automatic',format:'iife',legalComments:'eof',define:{'process.env.NODE_ENV':'"production"'},alias:{'@':root},tsconfig:'tsconfig.json'});
 const cssdir='dist/client/_next/static/css';
 fs.writeFileSync('docs/assets/style.css',fs.readdirSync(cssdir).filter(n=>n.endsWith('.css')).map(n=>fs.readFileSync(path.join(cssdir,n),'utf8')).join('\n'));
 for(const name of ['arm-core.glb','arm-upper-limb-right.glb','arm-structures.json','skeleton.glb','muscular.glb','cardiovascular.glb','nervous.glb','visceral.glb','lymphatic.glb'])fs.copyFileSync('public/models/'+name,'docs/models/'+name);
