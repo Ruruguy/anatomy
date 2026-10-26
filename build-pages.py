@@ -11,6 +11,10 @@ bridge='<script>'+(root/'site/bridge.js').read_text()+'</script>'
 layout='<style id="classroom-layout">'+(root/'site/classroom-layout.css').read_text()+'</style>'
 for name,source in [('adult',root/'source/adult/docs/index.html'),('pediatric',root/'source/pediatric/index.html')]:
  html=source.read_text().replace('<head>','<head>'+bridge,1).replace('</head>',layout+'</head>',1)
+ if name=='adult':
+  for asset in ['assets/app.js','assets/style.css']:
+   version=hashlib.sha256((out/name/asset).read_bytes()).hexdigest()[:12]
+   html=html.replace('./'+asset,'./'+asset+'?v='+version)
  (out/name/'index.html').write_text(html)
 payload={name:{'src':'./'+name+'/index.html'} for name in ['adult','pediatric']}
 html=(root/'site/template.html').read_text().replace('__PAYLOAD__',json.dumps(payload)).replace('__SHELL__',(root/'site/shell.js').read_text())

@@ -7,7 +7,7 @@
  window.cancelAnimationFrame=id=>{const record=pending.get(id);if(record?.native!=null)cancel(record.native);pending.delete(id)};
  window.addEventListener('message',event=>{if(event.source!==parent||event.data?.type!=='anatomy-classroom-visibility')return;const next=event.data.active===true;if(active===next)return;active=next;for(const [id,record] of pending){if(active)enqueue(id,record);else if(record.native!=null){cancel(record.native);record.native=null}}});
 })();
-</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="3D 人體解剖模型與 11 大系統知識、構造說明、教學提示及課堂問答。"><title>人體解剖教室｜3D 模型與系統知識</title><link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./assets/style.css"><style id="classroom-layout">/* Shared reading-first layout for both embedded classrooms. */
+</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="3D 人體解剖模型與 11 大系統知識、構造說明、教學提示及課堂問答。"><title>人體解剖教室｜3D 模型與系統知識</title><link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./assets/style.css?v=2440b5866f51"><style id="classroom-layout">/* Shared reading-first layout for both embedded classrooms. */
 :root{--lesson-font:18px;--room-bg:#0b1822;--room-panel:#122631;--room-line:#2d4654;--room-ink:#e5eff2;--room-accent:#a3decf;--model-height:clamp(340px,52dvh,640px)}
 html{overflow-y:auto;scrollbar-gutter:stable}body{margin:0;overflow-x:hidden;background:var(--room-bg);color:var(--room-ink);font-family:system-ui,-apple-system,'PingFang TC','Microsoft JhengHei',sans-serif}
 .studio,.app{height:auto;min-height:100dvh;overflow:visible;background:var(--room-bg);color:var(--room-ink);font-family:inherit}
@@ -109,4 +109,6 @@ html{overflow-y:auto;scrollbar-gutter:stable}body{margin:0;overflow-x:hidden;bac
 @media(min-width:1100px){.knowledge-intro,#knowledge>p{max-width:1200px}.studio .infopanel>.picked h2{display:inline-block;margin:6px 14px 4px 0}.studio .infopanel>.picked button{margin:6px}}
 @media(max-width:700px){:root{--model-height:430px}.studiohead,.app>header{padding:18px}.studiohead h1,.app>header h1{font-size:23px}.medical-stage-label{left:18px;top:16px}.medical-stage-label>b{font-size:15px}.medical-stage-label>small{font-size:10px}.studio .infopanel,.workspace>#panel{padding:26px 20px 32px}.knowledge-heading h2,#knowledge h2{font-size:26px}.knowledge p,.knowledge-organs p,.teaching-note p,.teaching-answer,#knowledge p,#knowledge .active-age p,#knowledge .compare p,#knowledge .answer{font-size:17px}.teaching-note,#knowledge .active-age{padding:18px}.studio .viewtools,.workspace .toolbar{gap:6px}.studio .viewtools button,.workspace .toolbar button{font-size:13px;padding:8px 10px}}
 @media(prefers-reduced-motion:reduce){.studio button,.app button{transition:none}}
-</style></head><body><div id="root"></div><noscript>請啟用 JavaScript 以使用 3D 互動教材。</noscript><script src="./assets/app.js" defer></script></body></html>
+
+@media(max-width:700px){.knowledge .knowledge-intro,#knowledge .active-age p,#knowledge .compare p,#knowledge .answer{font-size:17px}}
+</style></head><body><div id="root"></div><noscript>請啟用 JavaScript 以使用 3D 互動教材。</noscript><script src="./assets/app.js?v=f6deb19471d8" defer></script></body></html>
