@@ -15,12 +15,28 @@ export const researchModels=[
   }
 ];
 
+// Classify PIPER source names; filler volumes and computational caps stay unassigned.
 export function referenceSystem(name){
- if(/lung/i.test(name))return 'resp';if(/OR_Heart/.test(name))return 'heart';if(/Cerebr|Cerebell/i.test(name)||/半球/.test(name))return 'neuro';if(/Kidney/i.test(name))return 'urinary';if(/Liver|Stomach|Gallbladder|Pancreas/i.test(name))return 'digest';if(/Spleen|Thymus/i.test(name))return 'immune';if(/_BO_|_CA_|_FC_|_LG_/.test(name))return 'bone';if(/_MU_/.test(name))return 'muscle';if(/_SK_|_FL_|^SK_|^FL_/.test(name))return 'skin';return 'other';
+ if(/^TX_OR_[LR]_Lung_/.test(name))return 'resp';
+ if(/^TX_OR_Heart_/.test(name))return 'heart';
+ if(/^HE_OR_(CerebralCortex|Cerebellum)$/.test(name)||/^HE_(MG_|CF_CSF)/.test(name))return 'neuro';
+ if(/^AB_OR_[LR]_Kidney_/.test(name))return 'urinary';
+ if(/^AB_(OR_(Liver|Stomach|Gallbladder)|FT_Pancreas)_/.test(name))return 'digest';
+ if(/^AB_OR_Spleen_|^TX_FT_Thymus_/.test(name))return 'immune';
+ if(/_BO_|_CA_|_FC_|_LG_|_MU_.*Capsule|^UX_ELB_CAP_[LR]_(Hum|Rad)$/.test(name))return 'bone';
+ if(/_MU_/.test(name)&&!/cavity|ObturatorForamen/i.test(name))return 'muscle';
+ if(/_SK_|^SK_/.test(name))return 'skin';
+ return 'other';
 }
-export function referenceVisible(name,names){
- if(!['bone','heart','resp','digest','urinary','immune','neuro'].includes(referenceSystem(name)))return false;
- if(/_3D/.test(name)){const canonical=s=>s.replace(/_3D|_2D|_Rigid/gi,'').toLowerCase();if(names.some(n=>/_2D/.test(n)&&canonical(n)===canonical(name)))return false}
+const canonicalPart=name=>name.replace(/_3D|_2D|_Rigid/gi,'').toLowerCase();
+export function referenceVisible(name,names,topic='all'){
+ const system=referenceSystem(name);
+ if(topic==='all'?!['bone','heart','resp','digest','urinary','immune','neuro'].includes(system):system!==topic)return false;
+ // Meninges/CSF are available in the nervous-system part list; keep the brain surface unobscured by default.
+ if(system==='neuro'&&!/^HE_OR_(CerebralCortex|Cerebellum)$/.test(name))return false;
+ if(/_3D/i.test(name)&&names.some(n=>/_2D/i.test(n)&&canonicalPart(n)===canonicalPart(name)))return false;
+ if(/_Rigid/i.test(name)&&names.some(n=>!/_Rigid/i.test(n)&&canonicalPart(n)===canonicalPart(name)))return false;
+ if(/^TX_BO_Ribs_/.test(name)&&names.some(n=>/^TX_BO_[LR]_Rib\d+_2D/.test(n)))return false;
  return true;
 }
 

@@ -44,13 +44,37 @@ await test('Import UI state, focus, visibility, labels, opacity, and failure rol
  api.setTopic('neuro');s=api.getState();assert(!s.importedMode);assert(!s.items.some(i=>i.name.includes('大腦')));assert(s.items.some(i=>i.system==='neuro'));assert(query('#knowledge').innerHTML.includes('未提供精細腦部模型'));
 });
 await test('Research body keeps sourced meshes while filtering systems, with no schematic fallback',async()=>{const raw=fs.readFileSync('models/piper-6yo-pedestrian.glb');const ref=researchModels.find(r=>r.id==='piper6');const state={entry:ref.file,files:[{name:ref.file,data:raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength)}],metadata:normalizeMetadata(ref),labels:{},reference:'piper6'};const api=context.testAPI;await api.importLocal(state);assert.equal(api.getState().items.length,286);assert(query('#knowledge').innerHTML.includes('PIPER'));api.setTopic('resp');let visible=api.getState().items.filter(i=>i.object.visible);assert.equal(visible.length,2);assert(visible.every(i=>i.originalName.includes('Lung')));assert.equal(api.getState().importedState.reference,'piper6');api.setTopic('endo');assert.equal(api.getState().items.filter(i=>i.object.visible).length,0);assert.equal(api.getState().items.length,286);api.setTopic('all');assert(api.getState().items.filter(i=>i.object.visible).length>50);});
+await test('Research system controls cannot reopen unrelated body parts',async()=>{
+ const api=context.testAPI;
+ api.setTopic('resp');
+ query('#part-all').onclick();
+ let visible=api.getState().items.filter(i=>i.object.visible);
+ assert(visible.every(i=>/Lung|Diaphragm/.test(i.originalName)),'Restore must stay within the respiratory system');
+ assert(!query('#knowledge').innerHTML.includes('<span>左腎臟'),'Respiratory part list must omit kidneys');
+ query('#import-topic').onchange({target:{value:'heart'}});
+ visible=api.getState().items.filter(i=>i.object.visible);
+ assert.equal(visible.length,1);assert.equal(visible[0].originalName,'TX_OR_Heart_2D');
+ api.choose(visible[0]);query('#part-solo').onclick();query('#part-all').onclick();assert.equal(api.getState().items.filter(i=>i.object.visible).length,1);
+ const kidney=api.getState().items.find(i=>i.originalName==='AB_OR_L_Kidney_2D');query('#part-select').onchange({target:{value:kidney.id}});assert.equal(api.getState().selected,null);
+ api.setTopic('urinary');visible=api.getState().items.filter(i=>i.object.visible);assert.equal(visible.length,2,'Paired 2D/3D representations must not be doubled');
+ const saved=api.getState().importedState;await api.importLocal(saved);assert.equal(api.getState().items.filter(i=>i.object.visible).length,2,'Reopening current source must retain the system filter');
+ api.setTopic('endo');query('#part-all').onclick();assert.equal(api.getState().items.filter(i=>i.object.visible).length,0);assert(query('#knowledge').innerHTML.includes('未提供'));
+ const expected={heart:['TX_OR_Heart_2D'],resp:['TX_OR_L_Lung_2D','TX_OR_R_Lung_2D'],digest:['AB_OR_Liver_2D','AB_OR_Stomach_2D','AB_OR_Gallbladder_2D','AB_FT_Pancreas_2D'],urinary:['AB_OR_L_Kidney_2D','AB_OR_R_Kidney_2D'],immune:['TX_FT_Thymus_2D','AB_OR_Spleen_2D'],neuro:['HE_OR_CerebralCortex','HE_OR_Cerebellum'],endo:[],repro:[]};
+ for(const[id,names]of Object.entries(expected)){query('#systems').onclick({target:{closest:()=>({dataset:{topic:id}})}});assert.deepEqual(Array.from(api.getState().items.filter(i=>i.object.visible),i=>i.originalName).sort(),names.sort(),id);query('#part-all').onclick();assert.deepEqual(Array.from(api.getState().items.filter(i=>i.object.visible),i=>i.originalName).sort(),names.sort(),id+' restore')}
+ api.setTopic('muscle');assert(api.getState().items.filter(i=>i.object.visible).every(i=>!i.originalName.includes('Capsule')));
+ api.setTopic('skin');assert(api.getState().items.filter(i=>i.object.visible).every(i=>/_SK_|^SK_/.test(i.originalName)));
+ api.setTopic('all');
+});
 await test('Age controls retain infant lessons and PIPER after MRI model removal',async()=>{
  const api=context.testAPI,raw=fs.readFileSync('models/piper-6yo-pedestrian.glb');
  const response=()=>({ok:true,arrayBuffer:async()=>raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength)});
  modelFetch=async url=>{assert.equal(url,'piper-6yo-pedestrian.glb');return response()};
  await ageButtons[0].onclick();assert.equal(api.getState().age,'infant');assert(!api.getState().importedMode);assert(query('#knowledge').innerHTML.includes('正在看：嬰兒'));assert.equal(ageButtons[0].attributes['aria-pressed'],true);
  await ageButtons[1].onclick();assert.equal(api.getState().importedState.reference,'piper6');assert.equal(api.getState().items.length,286);assert.equal(ageButtons[1].attributes['aria-pressed'],true);
- let release;modelFetch=()=>new Promise(resolve=>release=resolve);const pending=ageButtons[1].onclick();ageButtons[0].onclick();release(response());await pending;assert(!api.getState().importedMode);assert.equal(api.getState().age,'infant');assert(query('#knowledge').innerHTML.includes('正在看：嬰兒'));
+ let finishFetch;modelFetch=()=>new Promise(resolve=>finishFetch=resolve);const loading=ageButtons[1].onclick();api.setTopic('resp');finishFetch(response());await loading;assert.equal(api.getState().importedState.metadata.topic,'resp');assert.equal(api.getState().items.filter(i=>i.object.visible).length,2,'System chosen while loading must survive completion');
+ let release;modelFetch=()=>new Promise(resolve=>release=resolve);const pending=ageButtons[1].onclick();ageButtons[0].onclick();api.setTopic('resp');release(response());await pending;assert(!api.getState().importedMode);assert.equal(api.getState().age,'infant');assert(api.getState().items.some(i=>i.object.visible&&i.system==='resp'));assert(query('#knowledge').innerHTML.includes('正在看：嬰兒'));
+ let resolveInitial;modelFetch=()=>new Promise(resolve=>resolveInitial=resolve);const initial=ageButtons[1].onclick();api.setTopic('digest');resolveInitial(response());await initial;assert.equal(api.getState().importedState.reference,'piper6');assert.equal(api.getState().items.filter(i=>i.object.visible).length,4,'Choosing a system during initial source loading must not cancel into a schematic');
+ modelFetch=async()=>{throw Error('Test network failure')};await ageButtons[1].onclick();assert.equal(api.getState().items.filter(i=>i.object.visible).length,4);query('#part-all').onclick();assert.equal(api.getState().items.filter(i=>i.object.visible).length,4,'Failed model reload must leave the active filter consistent');
 });
 await test('Clear material replaces black textured surfaces and restores original arrays',()=>{
  const root=new T.Group(),geometry=new T.BoxGeometry(),texture=new T.Texture();

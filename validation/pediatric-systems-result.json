@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "regressions": [
+    "Restoring a system cannot reveal other systems",
+    "Part selector and visibility list scoped to active system",
+    "Source teaching dropdown changes meshes and navigation together",
+    "Duplicate source surface representations hidden by default",
+    "Heart 1; lungs 2; digestive organs 4; kidneys 2; thymus/spleen 2; brain/cerebellum 2",
+    "Endocrine/reproductive show no unrelated meshes",
+    "Reopened source preserves its system",
+    "System changes during loading persist; canceled loads cannot blank schematic",
+    "Failed reload retains consistent system state"
+  ],
+  "tests": 15,
+  "modelBytesUnchanged": true,
+  "browserUI": "Node interaction tests with real GLB; actual WebGL rendering and physical pointer input not tested."
+}

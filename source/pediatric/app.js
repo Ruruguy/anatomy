@@ -1,6 +1,6 @@
 import {researchModels,referenceSystem,referenceVisible,referenceLabel} from 'research-catalog';
 const researchAssets=__RESEARCH_ASSETS__;
-let referenceRequest=0;
+let referenceRequest=0,pendingReference=null;
 import {setupMedicalLighting,setSurfacePresentation,ensureSurfaceNormals} from 'medical-rendering';
 let surfaceStyle='atlas';
 import {setReadableMaterial} from 'display-material';
@@ -66,6 +66,7 @@ function dispose(){document.querySelectorAll('[data-reference]').forEach(b=>b.se
 
 
 function buildModel(){
+  pendingReference=null;++referenceRequest;
   ++loadSerial;
   document.querySelectorAll('[data-topic]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.topic===topic));
   specimenMode=false;importedMode=false;$('#show-imported').setAttribute('aria-pressed','false');
@@ -588,6 +589,11 @@ function updateSelectedCard(){
     selEl.innerHTML=`<div class="sys-func-title"><span class="sys-badge" style="background:#264c45;border-color:#8cd3bf"><i style="background:#9be6d2"></i>來源模型</span>13 個月幼兒顱骨 · NIH 3D</div><p class="sys-func-text">Nevit Dilmen CC BY-SA 來源網格。提供真實兒科開放顱縫與顱頂幾何觀察，可旋轉放大檢視。</p>`;
     return;
   }
+  if(importedMode&&importedState.reference){
+    const current=topicOf(selected?.system)||topicOf(topic);
+    selEl.innerHTML=`<div class="sys-func-title"><span class="sys-badge" style="background:#264c45;border-color:${current.color}"><i style="background:${current.color}"></i>${escapeHTML(current.name)}</span>${escapeHTML(selected?.name||importedState.metadata.title)}</div><p class="sys-func-text">${current.function||current.intro}</p>`;
+    return;
+  }
   if(importedMode){
     if(selected){
       selEl.innerHTML=`<div class="sys-func-title"><span class="sys-badge" style="background:#264c45;border-color:#8cd3bf"><i style="background:#a3decf"></i>本機構造</span>${escapeHTML(selected.name)}</div><p class="sys-func-text">已選取本機分件。可於右側編輯教學標籤、調整不透明度或單獨放大觀察。</p>`;
@@ -619,7 +625,20 @@ function choose(i){
   if(importedMode&&$('#part-select')){$('#part-select').value=i?.id||'';$('#part-label').value=i?.name||'';$('#part-label').disabled=!i;}
 }
 function setTopic(id){
-  if(importedMode&&importedState.reference){topic=id;importedState.metadata.topic=id;for(const i of items)i.object.visible=id==='all'?referenceVisible(i.originalName,items.map(x=>x.originalName)):referenceSystem(i.originalName)===id;choose(null);renderKnowledge();fitVisible();document.querySelectorAll('[data-topic]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.topic===id));$('.stage-note').textContent=items.some(i=>i.object.visible)?'研究來源模型 · '+importedState.metadata.age:'此來源模型未含本系統的對應表面；下方仍提供教學文字。';return}
+  if(pendingReference){
+    pendingReference.topic=topicOf(id)?id:'all';
+    if(!importedMode||!importedState.reference){
+      topic=pendingReference.topic;for(const i of items)i.object.visible=false;choose(null);
+      document.querySelectorAll('[data-topic]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.topic===topic));
+      $('.stage-note').textContent=topicOf(topic).name+' · 正在載入來源模型…';return;
+    }
+  }
+  if(importedMode&&importedState.reference){
+    topic=topicOf(id)?id:'all';importedState.metadata.topic=topic;expanded=false;
+    applyReferenceVisibility();renderKnowledge();choose(null);fitVisible();
+    document.querySelectorAll('[data-topic]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.topic===topic));
+    $('#panel').scrollTop=0;return;
+  }
   if(specimenMode||importedMode){topic=id;buildModel()}
   topic=id;
   selected=null;
@@ -654,6 +673,7 @@ function renderSpecimenKnowledge(){
  $('#source-fit').onclick=fitVisible;$('#return-schematic').onclick=()=>setTopic('all');
 }
 async function loadSkull(){
+ pendingReference=null;++referenceRequest;
  const serial=++loadSerial;importedMode=false;$('#show-imported').setAttribute('aria-pressed','false');specimenMode=true;ready=false;expanded=false;topic='bone';dispose();$('#canvas-host .model-empty')?.remove();document.querySelectorAll('[data-topic],[data-age]').forEach(b=>b.setAttribute('aria-pressed','false'));$('#source-skull').setAttribute('aria-pressed','true');$('#explode').disabled=true;$('#explode').setAttribute('aria-pressed','false');$('#explode').textContent='展開';$('.stage-note').innerHTML='<span class="dot"></span>NIH 3D 來源網格 · 13 個月 · 非全身年齡模型';$('#selected').textContent='正在載入來源顱骨…';renderSpecimenKnowledge();
  try{
  const response=await fetch(skullAsset);if(!response.ok)throw Error('顱骨模型載入失敗');const bytes=new Uint8Array(await response.arrayBuffer());
@@ -665,23 +685,40 @@ async function loadSkull(){
  }catch(error){if(serial!==loadSerial)return;$('#selected').textContent='來源模型載入失敗；可點年齡按鈕返回示意版。';console.error(error)}
 }
 $('#source-skull').onclick=loadSkull;
+function sourceScopeItems(){
+ return importedState?.reference&&topic!=='all'?items.filter(i=>referenceSystem(i.originalName)===topic):items;
+}
+function updateReferenceSummary(){
+ if(!importedMode||!importedState.reference)return;
+ const count=items.filter(i=>i.object.visible).length,system=topicOf(topic),missing=!sourceScopeItems().length;
+ const explanation=missing?'此來源模型未提供對應表面；下方仍可閱讀教學文字。':count?`顯示 ${count} 個來源分件 · ${importedState.metadata.age}`:'目前構造已隱藏；可按恢復本系統重新顯示。';
+ $('.stage-note').textContent=system.name+' · '+explanation;
+ const status=$('#source-filter-status');if(status)status.textContent=`目前：${system.name} · 已顯示 ${count} 個分件。${topic==='all'?'總覽預設隱藏外層與重疊表面。':'清單僅列本系統構造，恢復顯示會保留系統篩選。'}${missing?'此來源未提供本系統的 3D 構造。':''}`;
+ $('#canvas-host .model-empty')?.remove();
+ if(!count){const note=document.createElement('div');note.className='model-empty';note.textContent=missing?`此來源模型未提供${system.name}的 3D 構造。請閱讀下方教學文字。`:'目前構造已隱藏；可按下方「恢復本系統」重新顯示。';host.append(note)}
+}
+function applyReferenceVisibility(){
+ const names=items.map(i=>i.originalName);
+ for(const i of items)i.object.visible=referenceVisible(i.originalName,names,topic);
+ updateReferenceSummary();updateLabels();
+}
 function renderImportedKnowledge(){
- const m=importedState.metadata;
+ const m=importedState.metadata,ref=researchModels.find(r=>r.id===importedState.reference),scope=sourceScopeItems(),system=topicOf(topic),visibleCount=items.filter(i=>i.object.visible).length;
  $('#age-label').textContent='LOCAL MODEL / 本機匯入';$('#scene-title').textContent=m.title||importedState.entry;$('#number').textContent='本機';
- $('#knowledge').innerHTML=`<h2>我的模型教學包</h2><p class="coverage">保留原模型形狀與分件，僅置中及等比縮放。預設使用淺粉色清晰材質；按下方「清晰材質」可切回原色。顏色只為便於觀察，不代表組織真實顏色。分件名稱由來源提供，尚未核對；單一網格不能自動分離器官。畫面不提供實際尺度量測。</p><label>選取構造<select id="part-select"><option value="">請選擇</option>${items.map(i=>`<option value="${i.id}">${escapeHTML(i.name)}</option>`).join('')}</select></label><label>教學標籤<input id="part-label" disabled maxlength="150"></label><div class="focus-row"><button id="part-solo">單獨放大</button><button id="part-all">全部顯示</button></div><details><summary>逐件顯示／隱藏（${items.length} 件）</summary><div class="part-list">${items.map(i=>`<label><input type="checkbox" data-part="${i.id}" ${i.object.visible?'checked':''}> <span>${escapeHTML(i.name)}</span></label>`).join('')}</div></details><label>模型不透明度<input id="part-opacity" type="range" min="10" max="100" value="${importOpacity}"></label><details open><summary>來源與教學資料</summary>${[['title','模型名稱'],['age','來源年齡（未知請留白）'],['source','來源網址／文獻'],['author','作者'],['license','授權']].map(([key,label])=>`<label>${label}<input data-meta="${key}" maxlength="500" value="${escapeHTML(m[key])}"></label>`).join('')}<label>正常／病理（依來源記載）<select data-meta="status">${[['unknown','未確認'],['normal','來源標示正常'],['pathology','來源標示病理']].map(([k,v])=>`<option value="${k}" ${m.status===k?'selected':''}>${v}</option>`).join('')}</select></label><label>教學筆記<textarea data-meta="notes" maxlength="4000">${escapeHTML(m.notes)}</textarea></label></details><label>搭配教學主題<select id="import-topic"><option value="">尚未指定</option>${topics.map(t=>`<option value="${t.id}" ${m.topic===t.id?'selected':''}>${t.name}</option>`).join('')}</select></label><div id="import-lesson"></div><button id="save-package">儲存模型教學包</button><p class="coverage">儲存包含原始模型、來源資料與標籤；不包含鏡頭、透明度或隱藏狀態。關閉前請儲存，下次用「匯入本機模型」重開 .anatomy.json。</p>`;
- const ref=researchModels.find(r=>r.id===importedState.reference);if(ref){$('#age-label').textContent='RESEARCH SOURCE / '+ref.age;$('#scene-title').textContent=ref.title;$('#number').textContent='來源';$('#knowledge').innerHTML=`<article class="reference-coverage"><span class="topic-en">已替換為研究來源網格</span><h2>${escapeHTML(ref.title)}</h2><p>${escapeHTML(ref.scope)}</p><p><a href="${ref.source}" target="_blank" rel="noopener">模型原始來源</a> · ${escapeHTML(ref.license)}</p><p class="coverage">下方可選取原始分件、單獨放大、顯示／隱藏，也可保存含原始網格的教學包。授權與來源資訊需一起保留。</p></article>`+$('#knowledge').innerHTML}
- const lesson=()=>{const t=topicOf(m.topic);$('#import-lesson').innerHTML=t?`<h3>${t.name} · 教學文字</h3><p>${t.intro}</p><p><strong>嬰兒：</strong>${t.infant}</p><p><strong>兒童：</strong>${t.child}</p><p>${t.point}</p><p class="coverage">文字是既有通則，不代表本次匯入模型的年齡或診斷；模型方位依原檔，不自動判定解剖左右。</p><details><summary>教學資料來源</summary>${refs(t.refs)}</details>`:''};lesson();$('#import-topic').onchange=e=>{m.topic=e.target.value;lesson()};
- $('#part-select').onchange=e=>choose(items.find(i=>i.id===e.target.value)||null);
+ $('#knowledge').innerHTML=`<h2>${ref?escapeHTML(system.name)+'・來源模型':'我的模型教學包'}</h2>${ref?`<p id="source-filter-status" class="coverage" role="status">目前：${escapeHTML(system.name)} · 已顯示 ${visibleCount} 個分件。${topic==='all'?'總覽預設隱藏外層與重疊表面。':'清單僅列本系統構造，恢復顯示會保留系統篩選。'}${scope.length?'':'此來源未提供本系統的 3D 構造。'}</p>`:''}<p class="coverage">保留原模型形狀與分件，僅置中及等比縮放。${ref?'目前使用來源顯示色；可按「清晰材質」切換霧面顯示。':'預設使用淺粉色清晰材質；按下方「清晰材質」可切回原色。'}顏色只為便於觀察，不代表組織真實顏色。分件名稱由來源提供，尚未核對；單一網格不能自動分離器官。畫面不提供實際尺度量測。</p><label>選取構造<select id="part-select"><option value="">請選擇</option>${scope.map(i=>`<option value="${i.id}">${escapeHTML(i.name)}</option>`).join('')}</select></label><label>教學標籤<input id="part-label" disabled maxlength="150"></label><div class="focus-row"><button id="part-solo">單獨放大</button><button id="part-all">${ref?(topic==='all'?'恢復全身總覽':'恢復本系統'):'全部顯示'}</button></div><details><summary>逐件顯示／隱藏（${scope.length} 件）</summary><div class="part-list">${scope.map(i=>`<label><input type="checkbox" data-part="${i.id}" ${i.object.visible?'checked':''}> <span>${escapeHTML(i.name)}</span></label>`).join('')}</div></details><label>模型不透明度<input id="part-opacity" type="range" min="10" max="100" value="${importOpacity}"></label><details open><summary>來源與教學資料</summary>${[['title','模型名稱'],['age','來源年齡（未知請留白）'],['source','來源網址／文獻'],['author','作者'],['license','授權']].map(([key,label])=>`<label>${label}<input data-meta="${key}" maxlength="500" value="${escapeHTML(m[key])}"></label>`).join('')}<label>正常／病理（依來源記載）<select data-meta="status">${[['unknown','未確認'],['normal','來源標示正常'],['pathology','來源標示病理']].map(([k,v])=>`<option value="${k}" ${m.status===k?'selected':''}>${v}</option>`).join('')}</select></label><label>教學筆記<textarea data-meta="notes" maxlength="4000">${escapeHTML(m.notes)}</textarea></label></details><label>${ref?'選擇系統（同步篩選模型）':'搭配教學主題'}<select id="import-topic"><option value="">尚未指定</option>${topics.map(t=>`<option value="${t.id}" ${m.topic===t.id?'selected':''}>${t.name}</option>`).join('')}</select></label><div id="import-lesson"></div><button id="save-package">儲存模型教學包</button><p class="coverage">儲存包含原始模型、來源資料與標籤；不包含鏡頭、透明度或隱藏狀態。關閉前請儲存，下次用「匯入本機模型」重開 .anatomy.json。</p>`;
+ if(ref){$('#age-label').textContent='RESEARCH SOURCE / '+ref.age;$('#scene-title').textContent=ref.title+' / '+system.name;$('#number').textContent='來源';$('#knowledge').innerHTML=`<article class="reference-coverage"><span class="topic-en">已替換為研究來源網格</span><h2>${escapeHTML(ref.title)}</h2><p>${escapeHTML(ref.scope)}</p><p><a href="${ref.source}" target="_blank" rel="noopener">模型原始來源</a> · ${escapeHTML(ref.license)}</p><p class="coverage">下方可選取原始分件、單獨放大、顯示／隱藏，也可保存含原始網格的教學包。授權與來源資訊需一起保留。</p></article>`+$('#knowledge').innerHTML}
+ const lesson=()=>{const t=topicOf(m.topic);$('#import-lesson').innerHTML=t?`<h3>${t.name} · 教學文字</h3><p>${t.intro}</p><p><strong>嬰兒：</strong>${t.infant}</p><p><strong>兒童：</strong>${t.child}</p><p>${t.point}</p><p class="coverage">文字是既有通則，不代表本次匯入模型的年齡或診斷；模型方位依原檔，不自動判定解剖左右。</p><details><summary>教學資料來源</summary>${refs(t.refs)}</details>`:''};lesson();$('#import-topic').onchange=e=>{if(ref){setTopic(e.target.value||'all');return}m.topic=e.target.value;lesson()};
+ $('#part-select').onchange=e=>choose(scope.find(i=>i.id===e.target.value)||null);
  $('#part-label').onchange=e=>{if(!selected)return;selected.name=e.target.value.trim()||selected.originalName;importedState.labels[selected.importKey]=selected.name;renderImportedKnowledge();choose(selected)};
- $('#part-solo').onclick=()=>{if(!selected){$('#selected').textContent='請先選擇構造';return}items.forEach(i=>i.object.visible=i===selected);syncParts();fitVisible()};
- $('#part-all').onclick=()=>{items.forEach(i=>i.object.visible=true);syncParts();fitVisible()};
- document.querySelectorAll('[data-part]').forEach(b=>b.onchange=()=>{const i=items.find(i=>i.id===b.dataset.part);i.object.visible=b.checked;if(!b.checked&&selected===i)choose(null)});
+ $('#part-solo').onclick=()=>{if(!selected||!scope.includes(selected)){$('#selected').textContent='請先選擇本系統構造';return}items.forEach(i=>i.object.visible=i===selected);syncParts();fitVisible()};
+ $('#part-all').onclick=()=>{if(ref){setTopic(topic);return}items.forEach(i=>i.object.visible=true);syncParts();fitVisible()};
+ document.querySelectorAll('[data-part]').forEach(b=>b.onchange=()=>{const i=scope.find(i=>i.id===b.dataset.part);if(!i)return;i.object.visible=b.checked;if(!b.checked&&selected===i)choose(null);syncParts()});
  $('#part-opacity').oninput=e=>{importOpacity=Number(e.target.value);items.forEach(i=>i.object.traverse(o=>{if(o.isMesh)for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.opacity=Number(e.target.value)/100;m.transparent=m.opacity<1;m.depthWrite=m.opacity>=1;m.needsUpdate=true}}));};
  document.querySelectorAll('[data-meta]').forEach(el=>el.oninput=()=>{m[el.dataset.meta]=el.value;if(el.dataset.meta==='title')$('#scene-title').textContent=el.value||importedState.entry});
  $('#save-package').onclick=()=>{try{const url=URL.createObjectURL(new Blob([packBundle(importedState,m,importedState.labels)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='模型教學包.anatomy.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),30000);$('#import-status').textContent='已交給瀏覽器下載，請確認檔案已儲存。'}catch(e){$('#import-status').textContent=e.message}};
 }
-function syncParts(){document.querySelectorAll('[data-part]').forEach(b=>b.checked=items.find(i=>i.id===b.dataset.part).object.visible)}
-async function importLocal(input){
+function syncParts(){document.querySelectorAll('[data-part]').forEach(b=>b.checked=items.find(i=>i.id===b.dataset.part).object.visible);updateReferenceSummary()}
+async function importLocal(input,{sourceTopic=null}={}){
  if(!root)return;
  const serial=loadSerial,ticket=++importSerial;$('#import-status').textContent='正在讀取本機模型…';$('#import-model').disabled=true;
  try{
@@ -692,26 +729,27 @@ async function importLocal(input){
  const prepared=meshes.map((mesh,index)=>{ensureSurfaceNormals(mesh.geometry);const g=mesh.geometry.clone();const materials=(Array.isArray(mesh.material)?mesh.material:[mesh.material]).map(m=>{const copy=m.clone();copy.flatShading=false;return copy});const copy=new T.Mesh(g,Array.isArray(mesh.material)?materials:materials[0]);copy.matrixAutoUpdate=false;copy.matrix.makeScale(scale,scale,scale).multiply(new T.Matrix4().makeTranslation(-center.x,-center.y,-center.z)).multiply(mesh.matrixWorld);return {mesh:copy,name:mesh.name||`未命名構造 ${index+1}`}});
  // Cloned materials retain source textures; transfer ownership to the displayed meshes.
  const gs=new Set(),ms=new Set();source.traverse(o=>{if(o.geometry)gs.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m)ms.add(m)});gs.forEach(g=>g.dispose());ms.forEach(m=>m.dispose());
+ if(!state.reference){pendingReference=null;++referenceRequest}
  ++loadSerial;dispose();importOpacity=100;importedState=state;importedMode=true;specimenMode=false;expanded=false;
  prepared.forEach((p,index)=>{const key='mesh-'+index,item=add(String(state.labels[key]||(state.reference?referenceLabel(p.name):p.name)).slice(0,150),'imported');item.originalName=p.name;item.importKey=key;item.object.add(p.mesh);p.mesh.userData.item=item});
  document.querySelectorAll('[data-topic],[data-age],#source-skull').forEach(b=>b.setAttribute('aria-pressed','false'));$('#show-imported').disabled=false;$('#show-imported').setAttribute('aria-pressed','true');$('#explode').disabled=true;$('#explode').setAttribute('aria-pressed','false');$('#explode').textContent='展開';$('#canvas-host .model-empty')?.remove();$('.stage-note').textContent='本機匯入 · 年齡與正常／病理狀態依來源記錄 · 尚未醫學核對';
- if(state.reference)for(const i of items)i.object.visible=referenceVisible(i.originalName,items.map(x=>x.originalName));updateLabels();renderKnowledge();setClarity(!state.reference);fitVisible();choose(null);ready=true;$('#loading')?.remove();$('#import-status').textContent=`已載入 ${result.meshes} 件、${Math.round(result.triangles).toLocaleString()} 個三角面。`;
+ if(state.reference){topic=sourceTopic?sourceTopic():(topicOf(state.metadata.topic)?state.metadata.topic:'all');state.metadata.topic=topic;for(const i of items)i.system=referenceSystem(i.originalName);applyReferenceVisibility();document.querySelectorAll('[data-topic]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.topic===topic))}updateLabels();renderKnowledge();setClarity(!state.reference);fitVisible();choose(null);ready=true;$('#loading')?.remove();$('#import-status').textContent=`已載入 ${result.meshes} 件、${Math.round(result.triangles).toLocaleString()} 個三角面。`;
  }catch(error){if(serial===loadSerial&&ticket===importSerial)$('#import-status').textContent='無法匯入：'+error.message}
  finally{if(ticket===importSerial)$('#import-model').disabled=false}
 }
 $('#import-model').onclick=()=>$('#model-files').click();
 $('#model-files').onchange=e=>{const files=Array.from(e.target.files);e.target.value='';if(files.length)importLocal(files)};
-$('#show-imported').onclick=()=>{if(importedState)importLocal(importedState)};
+$('#show-imported').onclick=()=>{if(importedState)return importLocal(importedState)};
 
 async function loadReference(id){
  if(!root){$('#import-status').textContent='3D 尚未就緒，仍可閱讀教學文字。';return}
- const ref=researchModels.find(r=>r.id===id);if(!ref)return;const ticket=++referenceRequest,serial=loadSerial;
+ const ref=researchModels.find(r=>r.id===id);if(!ref)return;const ticket=++referenceRequest,serial=loadSerial,request={id,topic:'all'};pendingReference=request;
  $('#import-status').textContent='正在載入研究來源模型：'+ref.title+'…';
  try{const response=await fetch(researchAssets[id]);if(!response.ok)throw Error('來源模型載入失敗');const data=await response.arrayBuffer();if(ticket!==referenceRequest||serial!==loadSerial)return;
- const state={entry:ref.file,files:[{name:ref.file,data}],metadata:normalizeMetadata({...ref,notes:ref.scope+'\n\n'+ref.notes}),labels:{},reference:id};await importLocal(state);
+ const state={entry:ref.file,files:[{name:ref.file,data}],metadata:normalizeMetadata({...ref,notes:ref.scope+'\n\n'+ref.notes}),labels:{},reference:id};await importLocal(state,{sourceTopic:()=>request.topic});
  if(importedState!==state)return;
- document.querySelectorAll('[data-reference]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.reference===id));document.querySelectorAll('[data-age]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.age==='child'&&id==='piper6'));$('.stage-note').textContent='研究來源模型 · '+ref.age+' · 生物力學表面可視化';
- }catch(error){if(ticket===referenceRequest)$('#import-status').textContent='模型未載入：'+error.message+'。可選擇其他來源或簡化示意。'}
+ document.querySelectorAll('[data-reference]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.reference===id));document.querySelectorAll('[data-age]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.age==='child'&&id==='piper6'));applyReferenceVisibility();
+ }catch(error){if(ticket===referenceRequest)$('#import-status').textContent='模型未載入：'+error.message+'。可選擇其他來源或簡化示意。'}finally{if(pendingReference===request)pendingReference=null}
 }
 document.querySelectorAll('[data-reference]').forEach(b=>b.onclick=()=>loadReference(b.dataset.reference));
 $('#show-schematic').onclick=()=>{++referenceRequest;topic='all';buildModel();choose(null)};
