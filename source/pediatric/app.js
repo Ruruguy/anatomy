@@ -1,3 +1,6 @@
+import {medicalGuides,guideLesson,mountMedicalAtlas} from 'medical-guide';
+const medicalAssets=__MEDICAL_ASSETS__;
+let guidePreferred=true,atlasKey='',atlasController=null;
 import {researchModels,referenceSystem,referenceVisible,referenceLabel} from 'research-catalog';
 const researchAssets=__RESEARCH_ASSETS__;
 let referenceRequest=0,pendingReference=null;
@@ -20,7 +23,21 @@ $('#close-modal').onclick=()=>$('#modal').close();$('#modal').addEventListener('
 $('#newborn').onclick=()=>showModal(`<span class="eyebrow">NEONATAL TRANSITION</span><h2>${neonatal.title}</h2><p>${neonatal.text}</p>${neonatal.cards.map(c=>`<article><h3>${c[0]}</h3><p>${c[1]}</p></article>`).join('')}${refs(neonatal.refs)}`);
 $('#about').onclick=()=>showModal(`<h2>模型範圍與資料來源</h2><p>本教室提供 6 歲 PIPER 全身生物力學表面模型，以及嬰兒／兒童全身幾何示意。各模型依其來源標示適用範圍。幾何示意未經解剖精度驗證，不能用來辨識細微構造或量測。</p><p>PIPER 保留來源節點與分件；其生物力學簡化不等於完整精細解剖圖譜，也不能代表嬰兒或新生兒。作者、年齡、授權及模型限制可在來源模型的教學區查看。</p>${refs(sources.map((_,i)=>i))}`);
 $('#systems').innerHTML=topics.map(t=>`<button data-topic="${t.id}" aria-pressed="${t.id===topic}"><i style="background:${t.color}"></i>${t.name}</button>`).join('');
-function renderKnowledge(){if(importedMode){renderImportedKnowledge();return}const t=topicOf(topic),index=topics.indexOf(t);$('#number').textContent=String(index).padStart(2,'0')+' / 11';$('#scene-title').textContent=t.name;$('#age-label').textContent=age==='infant'?'INFANT / 嬰兒示意':'CHILD / 兒童示意';
+function isMedicalGuideActive(){return guidePreferred&&!!medicalGuides[topic]}
+function syncMedicalGuide(){
+ const guide=medicalGuides[topic],active=isMedicalGuideActive(),modes=$('#reference-modes'),container=$('#medical-atlas');
+ modes.hidden=!guide;container.hidden=!active;host.classList.toggle('atlas-active',active);
+ $('#show-medical-guide').setAttribute('aria-pressed',active);$('#show-partial-source').setAttribute('aria-pressed',!!guide&&!active);
+ $('#show-partial-source').disabled=!renderer||!root||age==='infant';
+ if(active){if(atlasKey!==topic){atlasController=mountMedicalAtlas(container,topic,medicalAssets);atlasKey=topic}
+  $('#age-label').textContent=(age==='infant'?'嬰兒':'兒童')+'教學 / 通用解剖參照';$('#scene-title').textContent=guide.title+' · '+guide.subtitle;$('#number').textContent='圖解';
+  $('.stage-note').textContent='醫學原圖與中文導讀 · 通用解剖，不是兒童影像重建 · 可拖曳放大；下方有構造與兒科提醒';
+  $('#model-status').textContent='此系統以醫學圖解為主；來源 3D 僅含部分構造。';
+ }
+}
+$('#show-medical-guide').onclick=()=>{guidePreferred=true;renderKnowledge();updateSelectedCard()};
+$('#show-partial-source').onclick=()=>{if(!renderer||!root||age==='infant')return;guidePreferred=false;setTopic(topic,{keepView:true})};
+function renderKnowledge(){syncMedicalGuide();if(isMedicalGuideActive()){$('#knowledge').innerHTML=guideLesson(topic,age);return}if(importedMode){renderImportedKnowledge();return}const t=topicOf(topic),index=topics.indexOf(t);$('#number').textContent=String(index).padStart(2,'0')+' / 11';$('#scene-title').textContent=t.name;$('#age-label').textContent=age==='infant'?'INFANT / 嬰兒示意':'CHILD / 兒童示意';
  $('#knowledge').innerHTML=`<span class="topic-en">${t.en}</span><h2>${t.name}</h2><p>${t.intro}</p><div class="active-age"><div class="section-label">${age==='infant'?'正在看：嬰兒':'正在看：兒童'}</div><p>${t[age]}</p></div><div class="compare"><div><strong>${age==='infant'?'兒童階段':'嬰兒階段'}</strong><p>${t[age==='infant'?'child':'infant']}</p></div><div><strong>比較與理解</strong><p>${t.adult}</p></div></div><details id="structures"><summary>構造清單與單獨觀察</summary><select id="organ" aria-label="選擇構造"><option value="">請選擇構造</option>${items.filter(i=>topic==='all'||i.system===topic).map(i=>`<option value="${i.id}">${i.name}</option>`).join('')}</select><div class="focus-row"><button id="focus" disabled>單獨放大構造</button><button id="show-system">返回本系統</button></div><p class="coverage">可點選 3D 構造，也可使用清單。模型為代表性示意，並非完整器官列表。</p></details>${topic==='neuro'?'<p class="coverage">簡化示意僅顯示脊髓與少量神經走向，未提供精細腦部模型。</p>':''}<h3>教學觀察</h3><p>${t.point}</p><div class="question"><span class="section-label">課堂提問</span><p>${t.q}</p><button id="answer-toggle" aria-expanded="false">顯示解答</button><div id="answer" class="answer" hidden>${t.a}</div></div><details><summary>本主題資料來源</summary>${refs(t.refs)}</details>`;
  $('#answer-toggle').onclick=()=>{const b=$('#answer-toggle'),open=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',!open);b.textContent=open?'顯示解答':'收起解答';$('#answer').hidden=open};
  $('#organ').onchange=e=>choose(items.find(i=>i.id===e.target.value)||null);
@@ -580,6 +597,7 @@ function applyVisibility(){if(importedMode){items.forEach(i=>i.object.visible=tr
 function fit(box){if(!controls||box.isEmpty())return;controls.update();const c=box.getCenter(new T.Vector3()),size=box.getSize(new T.Vector3());const dist=Math.max(size.y,size.x/camera.aspect)*.5/Math.tan(T.MathUtils.degToRad(camera.fov/2))*1.30+size.z*.5;controls.target.copy(c);camera.position.copy(c).add(new T.Vector3(0,0,Math.max(.3,dist)));controls.update()}
 function fitVisible(){if(!root)return;const b=new T.Box3();for(const i of items)if(i.object.visible)b.union(new T.Box3().setFromObject(i.object));fit(b)}
 function updateSelectedCard(){
+  if(isMedicalGuideActive()){$('#selected').innerHTML=`<div class="sys-func-title">${medicalGuides[topic].title} · 醫學圖解</div><p class="sys-func-text">${medicalGuides[topic].intro}</p>`;return}
   const selEl=$('#selected');
   if(!selEl)return;
   if(importedMode&&importedState.reference){
@@ -617,13 +635,14 @@ function choose(i){
   if($('#focus'))$('#focus').disabled=!i;
   if(importedMode&&$('#part-select')){$('#part-select').value=i?.id||'';$('#part-label').value=i?.name||'';$('#part-label').disabled=!i;}
 }
-function setTopic(id){
+function setTopic(id,{keepView=false}={}){
+  if(!keepView)guidePreferred=true;
   if(pendingReference){
     pendingReference.topic=topicOf(id)?id:'all';
     if(!importedMode||!importedState.reference){
       topic=pendingReference.topic;for(const i of items)i.object.visible=false;choose(null);
       document.querySelectorAll('[data-topic]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.topic===topic));
-      $('.stage-note').textContent=topicOf(topic).name+' · 正在載入來源模型…';return;
+      $('.stage-note').textContent=topicOf(topic).name+' · 正在載入來源模型…';renderKnowledge();return;
     }
   }
   if(importedMode&&importedState.reference){
@@ -664,6 +683,7 @@ function sourceScopeItems(){
  return importedState?.reference&&topic!=='all'?items.filter(i=>referenceSystem(i.originalName)===topic):items;
 }
 function updateReferenceSummary(){
+ if(isMedicalGuideActive())return;
  if(!importedMode||!importedState.reference)return;
  const count=items.filter(i=>i.object.visible).length,system=topicOf(topic),missing=!sourceScopeItems().length;
  const explanation=missing?'此來源模型未提供對應表面；下方仍可閱讀教學文字。':count?`顯示 ${count} 個來源分件 · ${importedState.metadata.age}`:'目前構造已隱藏；可按恢復本系統重新顯示。';
@@ -681,12 +701,12 @@ function renderImportedKnowledge(){
  const m=importedState.metadata,ref=researchModels.find(r=>r.id===importedState.reference),scope=sourceScopeItems(),system=topicOf(topic),visibleCount=items.filter(i=>i.object.visible).length;
  $('#age-label').textContent='LOCAL MODEL / 本機匯入';$('#scene-title').textContent=m.title||importedState.entry;$('#number').textContent='本機';
  $('#knowledge').innerHTML=`<h2>${ref?escapeHTML(system.name)+'・來源模型':'我的模型教學包'}</h2>${ref?`<p id="source-filter-status" class="coverage" role="status">目前：${escapeHTML(system.name)} · 已顯示 ${visibleCount} 個分件。${topic==='all'?'總覽預設隱藏外層與重疊表面。':'清單僅列本系統構造，恢復顯示會保留系統篩選。'}${scope.length?'':'此來源未提供本系統的 3D 構造。'}</p>`:''}<p class="coverage">保留原模型形狀與分件，僅置中及等比縮放。${ref?'目前使用來源顯示色；可按「清晰材質」切換霧面顯示。':'預設使用淺粉色清晰材質；按下方「清晰材質」可切回原色。'}顏色只為便於觀察，不代表組織真實顏色。分件名稱由來源提供，尚未核對；單一網格不能自動分離器官。畫面不提供實際尺度量測。</p><label>選取構造<select id="part-select"><option value="">請選擇</option>${scope.map(i=>`<option value="${i.id}">${escapeHTML(i.name)}</option>`).join('')}</select></label><label>教學標籤<input id="part-label" disabled maxlength="150"></label><div class="focus-row"><button id="part-solo">單獨放大</button><button id="part-all">${ref?(topic==='all'?'恢復全身總覽':'恢復本系統'):'全部顯示'}</button></div><details><summary>逐件顯示／隱藏（${scope.length} 件）</summary><div class="part-list">${scope.map(i=>`<label><input type="checkbox" data-part="${i.id}" ${i.object.visible?'checked':''}> <span>${escapeHTML(i.name)}</span></label>`).join('')}</div></details><label>模型不透明度<input id="part-opacity" type="range" min="10" max="100" value="${importOpacity}"></label><details open><summary>來源與教學資料</summary>${[['title','模型名稱'],['age','來源年齡（未知請留白）'],['source','來源網址／文獻'],['author','作者'],['license','授權']].map(([key,label])=>`<label>${label}<input data-meta="${key}" maxlength="500" value="${escapeHTML(m[key])}"></label>`).join('')}<label>正常／病理（依來源記載）<select data-meta="status">${[['unknown','未確認'],['normal','來源標示正常'],['pathology','來源標示病理']].map(([k,v])=>`<option value="${k}" ${m.status===k?'selected':''}>${v}</option>`).join('')}</select></label><label>教學筆記<textarea data-meta="notes" maxlength="4000">${escapeHTML(m.notes)}</textarea></label></details><label>${ref?'選擇系統（同步篩選模型）':'搭配教學主題'}<select id="import-topic"><option value="">尚未指定</option>${topics.map(t=>`<option value="${t.id}" ${m.topic===t.id?'selected':''}>${t.name}</option>`).join('')}</select></label><div id="import-lesson"></div><button id="save-package">儲存模型教學包</button><p class="coverage">儲存包含原始模型、來源資料與標籤；不包含鏡頭、透明度或隱藏狀態。下載後請確認檔案已儲存。</p>`;
- if(ref){$('#age-label').textContent='RESEARCH SOURCE / '+ref.age;$('#scene-title').textContent=ref.title+' / '+system.name;$('#number').textContent='來源';$('#knowledge').innerHTML=`<article class="reference-coverage"><span class="topic-en">已替換為研究來源網格</span><h2>${escapeHTML(ref.title)}</h2><p>${escapeHTML(ref.scope)}</p><p><a href="${ref.source}" target="_blank" rel="noopener">模型原始來源</a> · ${escapeHTML(ref.license)}</p><p class="coverage">下方可選取原始分件、單獨放大、顯示／隱藏，也可保存含原始網格的教學包。授權與來源資訊需一起保留。</p></article>`+$('#knowledge').innerHTML}
+ if(ref){$('#age-label').textContent='RESEARCH SOURCE / '+ref.age;$('#scene-title').textContent=ref.title+' / '+system.name;$('#number').textContent='來源';$('#knowledge').innerHTML=(medicalGuides[topic]?`<div class="active-age"><div class="section-label">局部來源 3D，非完整系統</div><p>${medicalGuides[topic].coverage}</p></div>`:'')+`<article class="reference-coverage"><span class="topic-en">已替換為研究來源網格</span><h2>${escapeHTML(ref.title)}</h2><p>${escapeHTML(ref.scope)}</p><p><a href="${ref.source}" target="_blank" rel="noopener">模型原始來源</a> · ${escapeHTML(ref.license)}</p><p class="coverage">下方可選取原始分件、單獨放大、顯示／隱藏，也可保存含原始網格的教學包。授權與來源資訊需一起保留。</p></article>`+$('#knowledge').innerHTML}
  const lesson=()=>{const t=topicOf(m.topic);$('#import-lesson').innerHTML=t?`<h3>${t.name} · 教學文字</h3><p>${t.intro}</p><p><strong>嬰兒：</strong>${t.infant}</p><p><strong>兒童：</strong>${t.child}</p><p>${t.point}</p><p class="coverage">文字是既有通則，不代表本次匯入模型的年齡或診斷；模型方位依原檔，不自動判定解剖左右。</p><details><summary>教學資料來源</summary>${refs(t.refs)}</details>`:''};lesson();$('#import-topic').onchange=e=>{if(ref){setTopic(e.target.value||'all');return}m.topic=e.target.value;lesson()};
  $('#part-select').onchange=e=>choose(scope.find(i=>i.id===e.target.value)||null);
  $('#part-label').onchange=e=>{if(!selected)return;selected.name=e.target.value.trim()||selected.originalName;importedState.labels[selected.importKey]=selected.name;renderImportedKnowledge();choose(selected)};
  $('#part-solo').onclick=()=>{if(!selected||!scope.includes(selected)){$('#selected').textContent='請先選擇本系統構造';return}items.forEach(i=>i.object.visible=i===selected);syncParts();fitVisible()};
- $('#part-all').onclick=()=>{if(ref){setTopic(topic);return}items.forEach(i=>i.object.visible=true);syncParts();fitVisible()};
+ $('#part-all').onclick=()=>{if(ref){setTopic(topic,{keepView:true});return}items.forEach(i=>i.object.visible=true);syncParts();fitVisible()};
  document.querySelectorAll('[data-part]').forEach(b=>b.onchange=()=>{const i=scope.find(i=>i.id===b.dataset.part);if(!i)return;i.object.visible=b.checked;if(!b.checked&&selected===i)choose(null);syncParts()});
  $('#part-opacity').oninput=e=>{importOpacity=Number(e.target.value);items.forEach(i=>i.object.traverse(o=>{if(o.isMesh)for(const m of (Array.isArray(o.material)?o.material:[o.material])){m.opacity=Number(e.target.value)/100;m.transparent=m.opacity<1;m.depthWrite=m.opacity>=1;m.needsUpdate=true}}));};
  document.querySelectorAll('[data-meta]').forEach(el=>el.oninput=()=>{m[el.dataset.meta]=el.value;if(el.dataset.meta==='title')$('#scene-title').textContent=el.value||importedState.entry});
@@ -719,7 +739,7 @@ async function loadReference(id){
  try{const response=await fetch(researchAssets[id]);if(!response.ok)throw Error('來源模型載入失敗');const data=await response.arrayBuffer();if(ticket!==referenceRequest||serial!==loadSerial)return;
  const state={entry:ref.file,files:[{name:ref.file,data}],metadata:normalizeMetadata({...ref,notes:ref.scope+'\n\n'+ref.notes}),labels:{},reference:id};await importLocal(state,{sourceTopic:()=>request.topic});
  if(importedState!==state)return;
- document.querySelectorAll('[data-reference]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.reference===id));document.querySelectorAll('[data-age]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.age==='child'&&id==='piper6'));applyReferenceVisibility();
+ document.querySelectorAll('[data-reference]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.reference===id));document.querySelectorAll('[data-age]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.age==='child'&&id==='piper6'));applyReferenceVisibility();syncMedicalGuide();
  }catch(error){if(ticket===referenceRequest)$('#model-status').textContent='模型未載入：'+error.message+'。可選擇其他來源或簡化示意。'}finally{if(pendingReference===request)pendingReference=null}
 }
 document.querySelectorAll('[data-reference]').forEach(b=>b.onclick=()=>loadReference(b.dataset.reference));
@@ -729,7 +749,7 @@ renderKnowledge();
 try{renderer=new T.WebGLRenderer({antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setClearColor(0x000000,0);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;host.prepend(renderer.domElement);scene=new T.Scene();root=new T.Group();scene.add(root);camera=new T.PerspectiveCamera(34,1,.01,100);camera.position.set(0,2,7);controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=false;controls.screenSpacePanning=true;controls.zoomToCursor=true;controls.minDistance=.12;controls.maxDistance=35;setDrag('pan');setupMedicalLighting(T,renderer,scene,camera);
  const resize=()=>{const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};new ResizeObserver(resize).observe(host);resize();
  let down=null,moved=false;const active=new Set();renderer.domElement.addEventListener('pointerdown',e=>{active.add(e.pointerId);if(active.size>1)moved=true;else{down=[e.clientX,e.clientY];moved=false}});renderer.domElement.addEventListener('pointermove',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)moved=true});renderer.domElement.addEventListener('pointercancel',e=>{active.delete(e.pointerId);down=null;moved=true});renderer.domElement.addEventListener('pointerup',e=>{active.delete(e.pointerId);if(e.button!==0||moved||!down||active.size)return;const rect=renderer.domElement.getBoundingClientRect(),pointer=new T.Vector2((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1),ray=new T.Raycaster();ray.setFromCamera(pointer,camera);const hits=ray.intersectObjects(items.filter(i=>i.object.visible&&(topic==='skin'||i.system!=='skin')).map(i=>i.object),true);choose(hits[0]?.object.userData.item||null);down=null});
- $('#loading').textContent='正在載入 PIPER 6 歲兒童來源模型…';renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera);drawLabels()});
+ $('#loading').textContent='正在載入 PIPER 6 歲兒童來源模型…';renderer.setAnimationLoop(()=>{controls.update();if(!isMedicalGuideActive()){renderer.render(scene,camera);drawLabels()}});
  renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();$('#selected').textContent='3D 顯示已中斷，請重新開啟頁面；教學文字仍可閱讀。'});
  window.pediatricDiagnostics=()=>({importedMode,sourceId:importedMode?importedState?.reference:null,triangles:renderer.info.render.triangles,ready,age,topic,dragMode,expanded,count:items.length,visible:items.filter(i=>i.object.visible).length,selected:selected?.name,camera:camera.position.toArray(),target:controls.target.toArray(),bounds:new T.Box3().setFromObject(root).getSize(new T.Vector3()).toArray()});
  age='child';loadReference('piper6');

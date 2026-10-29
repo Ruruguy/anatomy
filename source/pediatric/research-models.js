@@ -34,10 +34,11 @@ export function referenceVisible(name,names,topic='all'){
  if(topic==='all'?!['bone','heart','resp','digest','urinary','immune','neuro'].includes(system):system!==topic)return false;
  // Meninges/CSF are available in the nervous-system part list; keep the brain surface unobscured by default.
  if(system==='neuro'&&!/^HE_OR_(CerebralCortex|Cerebellum)$/.test(name))return false;
+ if(name==='TX_MU_Subscapula_3D'&&names.some(n=>/^TX_MU_[LR]_Subscapula_2D$/.test(n)))return false;
  if(/_3D/i.test(name)&&names.some(n=>/_2D/i.test(n)&&canonicalPart(n)===canonicalPart(name)))return false;
  if(/_Rigid/i.test(name)&&names.some(n=>!/_Rigid/i.test(n)&&canonicalPart(n)===canonicalPart(name)))return false;
  if(/^TX_BO_Ribs_/.test(name)&&names.some(n=>/^TX_BO_[LR]_Rib\d+_2D/.test(n)))return false;
  return true;
 }
 
-export function referenceLabel(name){const terms=[['CerebralCortex','大腦皮質'],['Cerebellum','小腦'],['Kidney','腎臟'],['Liver','肝臟'],['Stomach','胃'],['Gallbladder','膽囊'],['Spleen','脾臟'],['Thymus','胸腺'],['Lung','肺'],['Heart','心臟'],['Ribs','肋骨'],['Sternum','胸骨'],['Scapula','肩胛骨'],['Clavicle','鎖骨'],['Humerus','肱骨'],['Forearm','前臂骨'],['Femur','股骨'],['Tibia','脛骨'],['Fibula','腓骨'],['Patella','髕骨'],['Pelvis','骨盆'],['Sacrum','薦骨']];const term=terms.find(([en])=>name.includes(en));if(!term)return name;const side=/_L_/.test(name)?'左':/_R_/.test(name)?'右':'';return side+term[1]+' · '+name}
+export function referenceLabel(name){const areaLabels={'TX_MU_Intercostal_2D':'肋間區整體表面（來源整合層）','TX_MU_Diaphragm_2D':'橫膈表面（來源模型）','AB_MU_AbdominalWall_2D':'腹壁整體表面（非逐條肌肉）','TX_MU_L_Subscapula_2D':'左肩胛下區表面（來源簡化）','TX_MU_R_Subscapula_2D':'右肩胛下區表面（來源簡化）'};if(areaLabels[name])return areaLabels[name]+' · '+name;const terms=[['CerebralCortex','大腦皮質'],['Cerebellum','小腦'],['Kidney','腎臟'],['Liver','肝臟'],['Stomach','胃'],['Gallbladder','膽囊'],['Spleen','脾臟'],['Thymus','胸腺'],['Lung','肺'],['Heart','心臟'],['Ribs','肋骨'],['Sternum','胸骨'],['Scapula','肩胛骨'],['Clavicle','鎖骨'],['Humerus','肱骨'],['Forearm','前臂骨'],['Femur','股骨'],['Tibia','脛骨'],['Fibula','腓骨'],['Patella','髕骨'],['Pelvis','骨盆'],['Sacrum','薦骨']];const term=terms.find(([en])=>name.includes(en));if(!term)return name;const side=/_L_/.test(name)?'左':/_R_/.test(name)?'右':'';return side+term[1]+' · '+name}

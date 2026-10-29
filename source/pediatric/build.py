@@ -3,9 +3,18 @@ import base64,json,re,sys,shutil,hashlib
 web_output=Path(sys.argv[sys.argv.index('--web-output')+1]) if '--web-output' in sys.argv else None
 root=Path(__file__).resolve().parent
 imports={}
-for name,file in [('research-catalog','research-models.js'),('medical-rendering','../../site/rendering-profile.js'),('display-material','display-material.js'),('model-import','model-import.js'),('stl','vendor/STLLoader.js'),('three','vendor/three.module.js'),('three/core','vendor/three.core.js'),('orbit','vendor/OrbitControls.js'),('content','content.js'),('gltf','vendor/GLTFLoader.js'),('geometry-utils','vendor/BufferGeometryUtils.js')]:
+for name,file in [('medical-guide','medical-guide.js'),('research-catalog','research-models.js'),('medical-rendering','../../site/rendering-profile.js'),('display-material','display-material.js'),('model-import','model-import.js'),('stl','vendor/STLLoader.js'),('three','vendor/three.module.js'),('three/core','vendor/three.core.js'),('orbit','vendor/OrbitControls.js'),('content','content.js'),('gltf','vendor/GLTFLoader.js'),('geometry-utils','vendor/BufferGeometryUtils.js')]:
     source=(root/file).read_text().replace("'./three.core.js'","'three/core'").replace("'../utils/BufferGeometryUtils.js'","'geometry-utils'")
     imports[name]='data:text/javascript;base64,'+base64.b64encode(source.encode()).decode()
+medical_assets={}
+for file in sorted((root/'reference-images').glob('*')):
+    if file.suffix not in ['.jpg','.webp','.png']:continue
+    if web_output:
+        target=web_output.parent/'reference-images'/file.name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(file,target)
+        medical_assets[file.name]='./reference-images/'+file.name+'?v='+hashlib.sha256(file.read_bytes()).hexdigest()[:12]
+    else:
+        mime={'.jpg':'image/jpeg','.webp':'image/webp','.png':'image/png'}[file.suffix]
+        medical_assets[file.name]='data:'+mime+';base64,'+base64.b64encode(file.read_bytes()).decode()
 catalog=json.JSONDecoder().raw_decode((root/'research-models.js').read_text().split('=',1)[1].lstrip())[0]
 research_assets={}
 if web_output:
@@ -20,7 +29,7 @@ for model in catalog:
         research_assets[model['id']]='./models/'+file.name+'?v='+hashlib.sha256(file.read_bytes()).hexdigest()[:12]
     else:
         research_assets[model['id']]='data:model/gltf-binary;base64,'+base64.b64encode(file.read_bytes()).decode()
-html=(root/'template.html').read_text().replace('__CSS__',(root/'style.css').read_text()).replace('__IMPORTS__','<script type="importmap">'+json.dumps({'imports':imports},ensure_ascii=False)+'</script>').replace('__APP__',(root/'app.js').read_text().replace('__RESEARCH_ASSETS__',json.dumps(research_assets,separators=(',',':'))))
+html=(root/'template.html').read_text().replace('__CSS__',(root/'style.css').read_text()).replace('__IMPORTS__','<script type="importmap">'+json.dumps({'imports':imports},ensure_ascii=False)+'</script>').replace('__APP__',(root/'app.js').read_text().replace('__MEDICAL_ASSETS__',json.dumps(medical_assets,separators=(',',':'))).replace('__RESEARCH_ASSETS__',json.dumps(research_assets,separators=(',',':'))))
 html+='\n<!-- Three.js r180 license\n'+(root/'vendor/THREE-LICENSE.txt').read_text()+'\n-->\n'
 if web_output:
     out=web_output;out.parent.mkdir(parents=True,exist_ok=True);out.write_text(html)

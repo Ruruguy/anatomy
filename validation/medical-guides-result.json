@@ -1,0 +1,47 @@
+{
+  "status": "passed",
+  "checks": [
+    "Medical illustrations exist online and are embedded byte-for-byte offline",
+    "Guide scope includes missing tracts and distinguishes generic anatomy from pediatric reconstruction",
+    "Pan, zoom, pinch and reset remain usable without WebGL or a fixed camera pivot",
+    "Muscle gallery switches original figures, credits and resets the viewport"
+  ],
+  "figures": [
+    {
+      "file": "muscle-overview.webp",
+      "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-1-interactions-of-skeletal-muscles-their-fascicle-arrangement-and-their-lever-systems",
+      "sha256": "be4577e45bf8968dcd9c9cdf1bdd1ccf32e357aa5602f84de2661a2de9ebd44d"
+    },
+    {
+      "file": "muscle-abdominal.webp",
+      "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-4-axial-muscles-of-the-abdominal-wall-and-thorax",
+      "sha256": "c8050645041a8f861caad9ffbbe0bf6d6cc28bb21a4effb176169fbdfabd1f3e"
+    },
+    {
+      "file": "muscle-arm.webp",
+      "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs",
+      "sha256": "b035da281b30d30424bb79ef82eeef38a567881174ce52a30da8664b48444dde"
+    },
+    {
+      "file": "muscle-thigh.webp",
+      "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-6-appendicular-muscles-of-the-pelvic-girdle-and-lower-limbs",
+      "sha256": "1b03afa558dcc1e87c4898a086a2134045aab56d36346fa6449538acfa75e38c"
+    },
+    {
+      "file": "muscle-leg.webp",
+      "source": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-6-appendicular-muscles-of-the-pelvic-girdle-and-lower-limbs",
+      "sha256": "7f7bd8e58fc39af321aeec8a7169a8ccee6a3fa3d4869337e8aac1abc4dce3b8"
+    },
+    {
+      "file": "digestive.jpg",
+      "source": "https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works",
+      "sha256": "259f173787f66be27d517ae5f41a4d15e80f1dcb36b7a5f5006f2715f5498bf9"
+    },
+    {
+      "file": "urinary.jpg",
+      "source": "https://www.niddk.nih.gov/health-information/urologic-diseases/urinary-tract-how-it-works",
+      "sha256": "674a28013fdc48cf3263c6fa2264d8344319e5dd52639568f6d99eb67ca1c87b"
+    }
+  ],
+  "limitation": "Static figure inspection and Node interaction checks; no independent medical certification or WebGL pixel validation."
+}

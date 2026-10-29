@@ -24,3 +24,18 @@ PIPER Child Pedestrian HBM 1.0.2；UCBL/Ifsttar、KTH、TU Berlin、PDB 等，�
 衍生 GLB 沿用原模型授權及附加條款。從原始有限元素節點與連接擷取外表面，四邊形對角剖為三角形；保留點位與部件名稱，僅轉換座標軸。未顯示梁元素、感測器及未具表面元素。這是生物力學模型的可視化，不是精細臨床圖譜。原始對應資料以 research-source/piper-6yo-source.tar.gz 提供，轉換程式在 ../tools/。
 
 引用：Beillas et al., Development and performance of the PIPER scalable child human body models, Protection of Children in Cars (2016)；Peres, A pedestrian version of the PIPER 6 year old child model, IRCOBI (2018)。
+
+
+# 醫學來源圖解（2026-10-29）
+
+這些圖為通用解剖參照，並非特定月齡的兒童影像重建。原圖未改動像素；網頁提供平移、縮放及另寫的中文導讀。完整下載網址與 SHA256 見 ../reference-images/provenance.json。
+
+- muscle-overview.webp：OpenStax, Anatomy and Physiology 2e，全身與肌束形態 · 圖 11.3。來源：https://openstax.org/books/anatomy-and-physiology-2e/pages/11-1-interactions-of-skeletal-muscles-their-fascicle-arrangement-and-their-lever-systems 。CC BY-NC-SA 4.0；原圖未修改。 https://creativecommons.org/licenses/by-nc-sa/4.0/
+- muscle-abdominal.webp：OpenStax, Anatomy and Physiology 2e，腹壁與後腹壁 · 圖 11.16。來源：https://openstax.org/books/anatomy-and-physiology-2e/pages/11-4-axial-muscles-of-the-abdominal-wall-and-thorax 。CC BY-NC-SA 4.0；原圖未修改。 https://creativecommons.org/licenses/by-nc-sa/4.0/
+- muscle-arm.webp：OpenStax, Anatomy and Physiology 2e，上臂與前臂 · 圖 11.25。來源：https://openstax.org/books/anatomy-and-physiology-2e/pages/11-5-muscles-of-the-pectoral-girdle-and-upper-limbs 。CC BY-NC-SA 4.0；原圖未修改。 https://creativecommons.org/licenses/by-nc-sa/4.0/
+- muscle-thigh.webp：OpenStax, Anatomy and Physiology 2e，髖部與大腿 · 圖 11.29。來源：https://openstax.org/books/anatomy-and-physiology-2e/pages/11-6-appendicular-muscles-of-the-pelvic-girdle-and-lower-limbs 。CC BY-NC-SA 4.0；原圖未修改。 https://creativecommons.org/licenses/by-nc-sa/4.0/
+- muscle-leg.webp：OpenStax, Anatomy and Physiology 2e，小腿前後側 · 圖 11.32。來源：https://openstax.org/books/anatomy-and-physiology-2e/pages/11-6-appendicular-muscles-of-the-pelvic-girdle-and-lower-limbs 。CC BY-NC-SA 4.0；原圖未修改。 https://creativecommons.org/licenses/by-nc-sa/4.0/
+- digestive.jpg：National Institute of Diabetes and Digestive and Kidney Diseases, National Institutes of Health，完整消化系統 · NIDDK。來源：https://www.niddk.nih.gov/health-information/digestive-diseases/digestive-system-how-it-works 。NIDDK Media Library：可免費引用，請保留來源。 https://www.niddk.nih.gov/news/media-library
+- urinary.jpg：National Institute of Diabetes and Digestive and Kidney Diseases, National Institutes of Health，完整尿路 · NIDDK。來源：https://www.niddk.nih.gov/health-information/urologic-diseases/urinary-tract-how-it-works 。NIDDK Media Library：可免費引用，請保留來源。 https://www.niddk.nih.gov/news/media-library
+
+OpenStax 作者：J. Gordon Betts、Kelly A. Young、James A. Wise、Eddie Johnson、Brandon Poe、Dean H. Kruse、Oksana Korol、Jody E. Johnson、Mark Womble、Peter DeSaix；Anatomy and Physiology 2e（2022）。圖解素材及其衍生編排依 CC BY-NC-SA 4.0 分享；PIPER 與其他原有素材仍依各自授權。Access for free at https://openstax.org/books/anatomy-and-physiology-2e/pages/1-introduction 。

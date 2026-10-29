@@ -1,3 +1,4 @@
+import {medicalGuides,guideLesson} from 'medical-guide';
 import {researchModels,referenceSystem,referenceVisible,referenceLabel} from 'research-catalog';
 import {setupMedicalLighting,setSurfacePresentation,ensureSurfaceNormals} from 'medical-rendering';
 import {setReadableMaterial} from 'display-material';
@@ -30,9 +31,9 @@ const elements=new Map();const query=s=>{if(s.includes('.model-empty')||['#sourc
 const ageButtons=['infant','child'].map(age=>{const b=new Element();b.dataset.age=age;return b});const sourceButton=new Element();sourceButton.dataset.reference='piper6';
 const document={querySelector:query,querySelectorAll:selector=>{const parts=selector.split(',');return [...(parts.includes('[data-age]')?ageButtons:[]),...(parts.includes('[data-reference]')?[sourceButton]:[])]},createElement:()=>new Element()};
 let modelFetch=async()=>{throw Error('Unexpected model request')};
-const context=vm.createContext({researchModels,referenceSystem,referenceVisible,referenceLabel,normalizeMetadata,ensureSurfaceNormals,setupMedicalLighting,setSurfacePresentation,setReadableMaterial,T,topics,sources,neonatal,readFiles,parseModel,packBundle,escapeHTML,disposeObject,document,console,URL,Blob,setTimeout,atob,Uint8Array,fetch:(...args)=>modelFetch(...args)});
-let app=fs.readFileSync('app.js','utf8').replace(/^import .*?;\n/gm,'');app=app.replace('const researchAssets=__RESEARCH_ASSETS__','const researchAssets={piper6:"piper-6yo-pedestrian.glb"}');app=app.slice(0,app.lastIndexOf('\nrenderKnowledge();\ntry{'));
-vm.runInContext(app+`\nroot=new T.Group();camera=new T.PerspectiveCamera(34,1,.01,100);controls={target:new T.Vector3(),update(){}};globalThis.testAPI={importLocal,buildModel,setTopic,choose,getState:()=>({items,importedMode,importedState,selected,root,camera,controls,age})};`,context);
+const context=vm.createContext({medicalGuides,guideLesson,mountMedicalAtlas:()=>({}),researchModels,referenceSystem,referenceVisible,referenceLabel,normalizeMetadata,ensureSurfaceNormals,setupMedicalLighting,setSurfacePresentation,setReadableMaterial,T,topics,sources,neonatal,readFiles,parseModel,packBundle,escapeHTML,disposeObject,document,console,URL,Blob,setTimeout,atob,Uint8Array,fetch:(...args)=>modelFetch(...args)});
+let app=fs.readFileSync('app.js','utf8').replace(/^import .*?;\n/gm,'');app=app.replace('const researchAssets=__RESEARCH_ASSETS__','const researchAssets={piper6:"piper-6yo-pedestrian.glb"}');app=app.replace('const medicalAssets=__MEDICAL_ASSETS__','const medicalAssets={}');app=app.slice(0,app.lastIndexOf('\nrenderKnowledge();\ntry{'));
+vm.runInContext(app+`\nage='child';renderer={};root=new T.Group();camera=new T.PerspectiveCamera(34,1,.01,100);controls={target:new T.Vector3(),update(){}};globalThis.testAPI={importLocal,buildModel,setTopic,setSourceTopic:id=>{guidePreferred=false;setTopic(id,{keepView:true})},choose,getState:()=>({items,importedMode,importedState,selected,root,camera,controls,age,guideActive:isMedicalGuideActive()})};`,context);
 await test('Import UI state, focus, visibility, labels, opacity, and failure rollback',async()=>{
  const api=context.testAPI;await api.importLocal(gltfState);let s=api.getState();assert(s.importedMode);assert.equal(s.items.length,2);
  const bounds=new T.Box3().setFromObject(s.root);assert(Math.abs(bounds.getSize(new T.Vector3()).x-3)<1e-6);assert(bounds.getCenter(new T.Vector3()).length()<1e-6);
@@ -43,10 +44,10 @@ await test('Import UI state, focus, visibility, labels, opacity, and failure rol
  const before=s.root.children.slice();await api.importLocal({...state,entry:'missing'});assert.deepEqual(api.getState().root.children,before);assert(query('#model-status').textContent.includes('模型未載入'));
  api.setTopic('neuro');s=api.getState();assert(!s.importedMode);assert(!s.items.some(i=>i.name.includes('大腦')));assert(s.items.some(i=>i.system==='neuro'));assert(query('#knowledge').innerHTML.includes('未提供精細腦部模型'));
 });
-await test('Research body keeps sourced meshes while filtering systems, with no schematic fallback',async()=>{const raw=fs.readFileSync('models/piper-6yo-pedestrian.glb');const ref=researchModels.find(r=>r.id==='piper6');const state={entry:ref.file,files:[{name:ref.file,data:raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength)}],metadata:normalizeMetadata(ref),labels:{},reference:'piper6'};const api=context.testAPI;await api.importLocal(state);assert.equal(api.getState().items.length,286);assert(query('#knowledge').innerHTML.includes('PIPER'));api.setTopic('resp');let visible=api.getState().items.filter(i=>i.object.visible);assert.equal(visible.length,2);assert(visible.every(i=>i.originalName.includes('Lung')));assert.equal(api.getState().importedState.reference,'piper6');api.setTopic('endo');assert.equal(api.getState().items.filter(i=>i.object.visible).length,0);assert.equal(api.getState().items.length,286);api.setTopic('all');assert(api.getState().items.filter(i=>i.object.visible).length>50);});
+await test('Research body keeps sourced meshes while filtering systems, with no schematic fallback',async()=>{const raw=fs.readFileSync('models/piper-6yo-pedestrian.glb');const ref=researchModels.find(r=>r.id==='piper6');const state={entry:ref.file,files:[{name:ref.file,data:raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength)}],metadata:normalizeMetadata(ref),labels:{},reference:'piper6'};const api=context.testAPI;await api.importLocal(state);assert.equal(api.getState().items.length,286);assert(query('#knowledge').innerHTML.includes('PIPER'));api.setSourceTopic('resp');let visible=api.getState().items.filter(i=>i.object.visible);assert.equal(visible.length,2);assert(visible.every(i=>i.originalName.includes('Lung')));assert.equal(api.getState().importedState.reference,'piper6');api.setTopic('endo');assert.equal(api.getState().items.filter(i=>i.object.visible).length,0);assert.equal(api.getState().items.length,286);api.setTopic('all');assert(api.getState().items.filter(i=>i.object.visible).length>50);});
 await test('Research system controls cannot reopen unrelated body parts',async()=>{
  const api=context.testAPI;
- api.setTopic('resp');
+ api.setSourceTopic('resp');
  query('#part-all').onclick();
  let visible=api.getState().items.filter(i=>i.object.visible);
  assert(visible.every(i=>/Lung|Diaphragm/.test(i.originalName)),'Restore must stay within the respiratory system');
@@ -56,14 +57,20 @@ await test('Research system controls cannot reopen unrelated body parts',async()
  assert.equal(visible.length,1);assert.equal(visible[0].originalName,'TX_OR_Heart_2D');
  api.choose(visible[0]);query('#part-solo').onclick();query('#part-all').onclick();assert.equal(api.getState().items.filter(i=>i.object.visible).length,1);
  const kidney=api.getState().items.find(i=>i.originalName==='AB_OR_L_Kidney_2D');query('#part-select').onchange({target:{value:kidney.id}});assert.equal(api.getState().selected,null);
- api.setTopic('urinary');visible=api.getState().items.filter(i=>i.object.visible);assert.equal(visible.length,2,'Paired 2D/3D representations must not be doubled');
+ api.setSourceTopic('urinary');visible=api.getState().items.filter(i=>i.object.visible);assert.equal(visible.length,2,'Paired 2D/3D representations must not be doubled');
  const saved=api.getState().importedState;await api.importLocal(saved);assert.equal(api.getState().items.filter(i=>i.object.visible).length,2,'Reopening current source must retain the system filter');
  api.setTopic('endo');query('#part-all').onclick();assert.equal(api.getState().items.filter(i=>i.object.visible).length,0);assert(query('#knowledge').innerHTML.includes('未提供'));
  const expected={heart:['TX_OR_Heart_2D'],resp:['TX_OR_L_Lung_2D','TX_OR_R_Lung_2D'],digest:['AB_OR_Liver_2D','AB_OR_Stomach_2D','AB_OR_Gallbladder_2D','AB_FT_Pancreas_2D'],urinary:['AB_OR_L_Kidney_2D','AB_OR_R_Kidney_2D'],immune:['TX_FT_Thymus_2D','AB_OR_Spleen_2D'],neuro:['HE_OR_CerebralCortex','HE_OR_Cerebellum'],endo:[],repro:[]};
- for(const[id,names]of Object.entries(expected)){query('#systems').onclick({target:{closest:()=>({dataset:{topic:id}})}});assert.deepEqual(Array.from(api.getState().items.filter(i=>i.object.visible),i=>i.originalName).sort(),names.sort(),id);query('#part-all').onclick();assert.deepEqual(Array.from(api.getState().items.filter(i=>i.object.visible),i=>i.originalName).sort(),names.sort(),id+' restore')}
- api.setTopic('muscle');assert(api.getState().items.filter(i=>i.object.visible).every(i=>!i.originalName.includes('Capsule')));
+ for(const[id,names]of Object.entries(expected)){api.setSourceTopic(id);assert.deepEqual(Array.from(api.getState().items.filter(i=>i.object.visible),i=>i.originalName).sort(),names.sort(),id);query('#part-all').onclick();assert.deepEqual(Array.from(api.getState().items.filter(i=>i.object.visible),i=>i.originalName).sort(),names.sort(),id+' restore')}
+ api.setSourceTopic('muscle');assert(api.getState().items.filter(i=>i.object.visible).every(i=>!i.originalName.includes('Capsule')));
  api.setTopic('skin');assert(api.getState().items.filter(i=>i.object.visible).every(i=>/_SK_|^SK_/.test(i.originalName)));
  api.setTopic('all');
+});
+await test('Incomplete pediatric systems open medical guides and retain the partial 3D option',()=>{
+ const api=context.testAPI;
+ for(const id of ['muscle','digest','urinary']){query('#systems').onclick({target:{closest:()=>({dataset:{topic:id}})}});assert(api.getState().guideActive);assert.equal(query('#medical-atlas').hidden,false);assert(query('#knowledge').innerHTML.includes('醫學資料來源'));assert(query('#knowledge').innerHTML.includes(medicalGuides[id].flow.at(-1)));assert(query('#scene-title').textContent.includes(medicalGuides[id].title));}
+ query('#show-partial-source').onclick();assert(!api.getState().guideActive);assert.equal(query('#medical-atlas').hidden,true);assert.equal(api.getState().items.filter(i=>i.object.visible).length,2);assert(query('#knowledge').innerHTML.includes('非完整系統'));
+ query('#show-medical-guide').onclick();assert(api.getState().guideActive);api.setTopic('bone');assert(!api.getState().guideActive);assert.equal(query('#reference-modes').hidden,true);
 });
 await test('Age controls retain infant lessons and PIPER after MRI model removal',async()=>{
  const api=context.testAPI,raw=fs.readFileSync('models/piper-6yo-pedestrian.glb');
