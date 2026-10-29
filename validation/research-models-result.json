@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "reports": [
+    {
+      "id": "piper6",
+      "meshes": 286,
+      "triangles": 456012,
+      "displayBounds": [
+        376.0542907714844,
+        1162.841552734375,
+        397.0196990966797
+      ],
+      "sourceSHA256": "bff48b4f97c6204efa8619ef0798adfc525d06a88c09008bb19f9d51f7ce70a1"
+    }
+  ],
+  "sourcePositionsPreservedDuringNormalGeneration": true,
+  "webAssetsMatch": true,
+  "scope": "Source model parsing, normals and packaging; no GPU rendering or clinical precision validation."
+}

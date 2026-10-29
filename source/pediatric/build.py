@@ -14,6 +14,11 @@ else:
     asset='data:model/gltf-binary;base64,'+base64.b64encode(skull.read_bytes()).decode()
 catalog=json.JSONDecoder().raw_decode((root/'research-models.js').read_text().split('=',1)[1].lstrip())[0]
 research_assets={}
+if web_output:
+    model_dir=web_output.parent/'models'
+    allowed={skull.name}|{model['file'] for model in catalog}
+    for obsolete in model_dir.glob('*.glb'):
+        if obsolete.name not in allowed:obsolete.unlink()
 for model in catalog:
     file=root/'models'/model['file']
     if web_output:

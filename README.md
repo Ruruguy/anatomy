@@ -47,18 +47,10 @@ node validation/test-pages.mjs
 
 成人預設開啟組合狀態的全身來源模型，可切換灰白標本，並在選取構造後單獨觀察、恢復周圍構造。改善霧面材質與光影，區分腦部和周邊神經的顯示色；色彩用於教學識別。兩個教室共用深藍模型區、淺色橫向教材與高對比文字。兒科提高既有曲面的取樣，不代表增加經核對的解剖結構。所有來源模型原始檔及授權均保留。
 
-## 兒科研究來源模型（2026-10-26）
+## 兒科來源模型（2026-10-29）
 
-兒童教室預設開啟 PIPER 6 歲全身來源模型（286 個表面分件，並非 286 個器官）；另有 IBA 6 個月與 60 個月（5 歲）MRI 腦皮質。兩套腦皮質各有左右半球、655,360 個三角面，頂點逐一比對來源，只作座標軸轉換。6 個月和 5 歲形狀並非等比縮放。只含皮質外表面，不包含腦幹、小腦、腦室或功能區。
+兒童教室預設為 PIPER 6 歲全身模型（286 個表面分件，並非 286 個器官）。依使用者要求移除 IBA 6 個月與 5 歲腦皮質選項及模型檔；「嬰兒」按鈕改為發育知識與簡化示意。另保留 13 個月幼兒顱骨，並按來源標示年齡。
 
-PIPER 為生物力學有限元素模型，有幾何簡化與缺少構造，不是精細臨床圖譜，也不代表嬰兒。預設隱藏外層皮膚、填充軟組織及部分重疊層；系統篩選只使用來源已有表面。舊版另標為「簡化示意（舊版）」。
+PIPER 為生物力學有限元素模型，有幾何簡化與缺少構造，不是精細臨床圖譜，也不代表嬰兒。預設顯示骨骼與部分器官，隱藏皮膚、填充軟組織與部分重疊層；系統按鈕只篩選來源本身已有構造，缺少時顯示文字說明。舊版保留在「簡化示意（舊版）」。
 
-IBA 原作者 Sahar Ahmad、Pew-Thian Yap（UNC-Chapel Hill），資料集 https://zenodo.org/records/7044932 ，衍生模型沿用 CC BY-NC-SA 4.0。PIPER 原始模型與衍生表面遵循原 GPLv3 或更新版本以及責任／Open Science 附加條款，來源 https://gitlab.com/piper-project.org/child_pedestrian 。原始資料、完整通知與校驗碼見 source/pediatric/models/research-source/ 和 research-provenance.json，轉換程式見 source/pediatric/tools/。模型授權互相獨立，不代表整個網站都採同一授權。
-
-線上版按需載入新 GLB，避免一次載入全部模型。離線單檔約 105 MiB。來源模型及打包檢查可執行：
-
-```
-python3 build.py
-python3 build-pages.py
-node --experimental-loader ./source/pediatric/validation/model-loader.mjs ./validation/test-research-models.mjs
-```
+PIPER 衍生模型沿用原 GPLv3 或更新版本及其責任／Open Science 附加條款。原始資料、通知與校驗碼見 source/pediatric/models/research-source/、research-provenance.json，轉換程式見 source/pediatric/tools/。線上版按需讀取 GLB，離線單檔內嵌目前啟用的模型。

@@ -17,12 +17,6 @@ GLB 原檔未修改；網頁只在顯示時旋轉、置中、等比縮放、改�
 
 # 新增研究來源模型（2026-10-26）
 
-## IBA：6 個月與 60 個月腦皮質
-
-Sahar Ahmad、Pew-Thian Yap（UNC-Chapel Hill），Surface-Volume Atlases of the Infant Brain, v1.0，https://zenodo.org/records/7044932 。CC BY-NC-SA 4.0：https://creativecommons.org/licenses/by-nc-sa/4.0/ 。論文：https://doi.org/10.1038/s41592-022-01703-z 。
-
-使用 IBA-06Months 與 IBA-60Months 的左右 pial VTK。轉換成 GLB，保留來源頂點與拓撲，僅轉換座標軸、生成顯示法線；沒有平滑、簡化或生成腦回。GLB 衍生模型沿用 CC BY-NC-SA 4.0。這是研究群體圖譜，只有大腦皮質表面，並非完整腦部或單一病患解剖。
-
 ## PIPER：6 歲兒童行人模型
 
 PIPER Child Pedestrian HBM 1.0.2；UCBL/Ifsttar、KTH、TU Berlin、PDB 等，足部來源含 CEESAR（CC BY 4.0）。https://gitlab.com/piper-project.org/child_pedestrian 。原始模型採 GNU GPL v3 或更新版本，附責任與 Open Science 條款；原文完整保存於 research-source/。

@@ -1,62 +1,7 @@
 {
   "retrieved": "2026-10-26",
-  "brainSource": "https://zenodo.org/records/7044932",
-  "paper": "https://doi.org/10.1038/s41592-022-01703-z",
-  "brainLicense": "CC-BY-NC-SA-4.0",
   "piperSource": "https://gitlab.com/piper-project.org/child_pedestrian",
   "piperLicense": "GPL-3.0-or-later + liability and Open Science terms; original notices in research-source/",
-  "verifiedArchives": [
-    {
-      "file": "IBA-06Months.zip",
-      "verifiedChecksum": "md5:7cdcc7d7709bdfcf0ea3cb79a0883853"
-    },
-    {
-      "file": "IBA-60Months.zip",
-      "verifiedChecksum": "md5:dd22d0a639e4fbd4d990f079dd9475ab"
-    }
-  ],
-  "brainConversions": [
-    {
-      "file": "iba-06months-pial.glb",
-      "bytes": 11798540,
-      "meshes": 2,
-      "vertices": 327684,
-      "triangles": 655360,
-      "sha256": "55509a95a673298bc3a5272976e3977051e1742862e6fde53d69f791798ba76c",
-      "sources": [
-        {
-          "original": "06Months/IBA_06Months_lh.pial.vtk",
-          "sha256": "bc8b7c34a8556cb025af5fdc1f72d62eea7abb8499b53b76fc761d31b8748d8e",
-          "preservedAs": "iba-06-lh.pial.vtk.gz"
-        },
-        {
-          "original": "06Months/IBA_06Months_rh.pial.vtk",
-          "sha256": "c034f1a6b44630bcf7a7ec3b96ae61c27f074b2d67cec74ec616d5702f02c4fe",
-          "preservedAs": "iba-06-rh.pial.vtk.gz"
-        }
-      ]
-    },
-    {
-      "file": "iba-60months-pial.glb",
-      "bytes": 11798536,
-      "meshes": 2,
-      "vertices": 327684,
-      "triangles": 655360,
-      "sha256": "0770f7365534d8a29adba4206ca1f12af2d382573f3e3285da586662696efa7a",
-      "sources": [
-        {
-          "original": "60Months/IBA_60Months_lh.pial.vtk",
-          "sha256": "5b3bdc1552cfc81b259585f65a02e365337993868d633a0c2224549fbcdfd08b",
-          "preservedAs": "iba-60-lh.pial.vtk.gz"
-        },
-        {
-          "original": "60Months/IBA_60Months_rh.pial.vtk",
-          "sha256": "3ffc136f7375fb2339b005ae7f706584dcd863f6cbb3040ee4c56759c1706738",
-          "preservedAs": "iba-60-rh.pial.vtk.gz"
-        }
-      ]
-    }
-  ],
   "piperConversion": {
     "file": "piper-6yo-pedestrian.glb",
     "bytes": 8460472,
